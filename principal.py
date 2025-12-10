@@ -33,9 +33,5 @@ if filtro == 'Raça':
         'Escolha a raça a analisar:',
         ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não informado'])
 
-botao = st.button('Exibir gráficos')
-
-if botao:
-    st.write("Ano selecionado:", ano)
-    st.write("Filtro escolhido:", filtro)
+botao = st.button('Exibir gráficos')  
 
