@@ -16,8 +16,7 @@ ano = st.radio('Escolha o ano para a análise:'
 filtro = st.selectbox('Escolha uma variável para análise:',
                                     sorted(['Renda', 'Ano de conclusão', 'Raça']))
 
-if filtro == 'Renda':
-    salario = st.selectbox(
-        'Escolha a faixa salarial:',
-        ['Até R$1.420', 'Entre R$1.420 e R$3.530', 'Entre R$3.531 e R$9.884', 'Acima de R$9.884']
-    )
+#if filtro == 'Renda':
+    #salario = st.selectbox(
+        #'Escolha a faixa salarial:',
+        #['Até R$1.420', 'Entre R$1.420 e R$3.530', 'Entre R$3.531 e R$9.884', 'Acima de R$9.884'])
