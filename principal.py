@@ -9,8 +9,11 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded"
 )
-ano = st.checkbox('2020')
-ano = st.checkbox('2021', '2022', '2023', '2024')
+ano = st.checkbox('Escolha o ano para a análise:'
+                    ('2020', '2021', '2022', '2023', '2024'))
 
 filtro = st.selectbox('Escolha uma variável para análise:',
                                     sorted(['Renda', 'Ano de conclusão', 'Raça']))
+
+if filtro == 'Renda'{
+    ano = st.checkbox('R$1.420', 'Entre R$1.420 e R$2840', '2022', '2023', '2024')
