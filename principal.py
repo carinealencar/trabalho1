@@ -1,5 +1,8 @@
 import streamlit as st
 import os
+import pandas as pd
+import  matplotlib.pyplot as plt
+import seaborn as sns
 
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos 5 anos",
@@ -34,4 +37,15 @@ if filtro == 'Raça':
         ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não informado'])
 
 botao = st.button('Exibir gráficos')  
+
+if botao:
+    if ano == 2020:
+        bancodedados2020
+        sexo = group.by(sexo)    
+    
+        plt.figure(figsize=(10, 6))
+        plot = sns.boxplot(
+            x=sexo, y='Notas', data=data_new, showmeans=True, palette="coolwarm",
+            meanprops={'marker': 'D', 'markerfacecolor': 'red', 'markeredgecolor': 'black', 'markersize': 7}
+        )
 
