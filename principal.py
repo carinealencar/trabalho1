@@ -10,8 +10,8 @@ st.set_page_config(
 
 st.title('Dashboard das notas do Enem nos últimos 5 anos 📊')
 
-ano = st.radio('Escolha o ano para a análise:'
-                    ('2020', '2021', '2022', '2023', '2024'))
+ano = st.selectbox('Escolha o ano para a análise:',
+    ('2020', '2021', '2022', '2023', '2024'))
 
 filtro = st.selectbox('Escolha uma variável para análise:',
                                     sorted(['Renda', 'Ano de conclusão', 'Raça']))
