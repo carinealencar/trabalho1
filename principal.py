@@ -33,9 +33,9 @@ if filtro == 'Raça':
         'Escolha a raça a analisar:',
         ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não informado'])
 
-st.bottom('Exibir gráficos')
+st.button('Exibir gráficos')
 
-if st.bottom:
+if st.button:
     print(ano)
     print(filtro)
 
