@@ -20,3 +20,13 @@ if filtro == 'Renda':
     salario = st.selectbox(
         'Escolha a faixa salarial:',
         ['Até R$1.420', 'Entre R$1.420 e R$3.530', 'Entre R$3.531 e R$9.884', 'Acima de R$9.884'])
+
+if filtro == 'Ano de conclusão':
+    salario = st.selectbox(
+        'Escolha o período do ano de conclusão:',
+        ['Entre 2007 e 2012', 'Entre 2013 e 2018', 'Entre 2019 e 2023'])
+
+if filtro == 'Raça':
+    salario = st.selectbox(
+        'Escolha a raça a analisar:',
+        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não informado'])
