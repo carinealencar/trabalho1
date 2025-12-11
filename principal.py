@@ -38,8 +38,7 @@ if filtro == 'Raça':
 
 botao = st.button('Exibir gráficos')  
 
-if botao:
-    if ano == 2020:
-        bancodedados2020
-        sexo = group.by(sexo) )
+
+     
+     
 
