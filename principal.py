@@ -41,11 +41,5 @@ botao = st.button('Exibir gráficos')
 if botao:
     if ano == 2020:
         bancodedados2020
-        sexo = group.by(sexo)    
-    
-        plt.figure(figsize=(10, 6))
-        plot = sns.boxplot(
-            x=sexo, y='Notas', data=data_new, showmeans=True, palette="coolwarm",
-            meanprops={'marker': 'D', 'markerfacecolor': 'red', 'markeredgecolor': 'black', 'markersize': 7}
-        )
+        sexo = group.by(sexo) )
 
