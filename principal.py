@@ -35,6 +35,10 @@ if filtro == 'Raça':
 
 botao = st.button('Exibir gráficos')  
 
+if botao:
+    
+
+
 
      
      
