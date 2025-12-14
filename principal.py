@@ -19,8 +19,13 @@ FILE_PATHS = {
 
 @st.cache_data
 def load_data(path):
-    df = pd.read_csv(path, sep=';', encoding='latin1')
-    return df
+    return pd.read_csv(
+        path,
+        sep=';',
+        encoding='latin1',
+        compression='zip',
+        low_memory=False
+    )
 
 st.title('Dashboard das notas do Enem nos últimos anos 📊')
 st.header('Filtros:')
@@ -74,28 +79,28 @@ if botao:
             st.metric("Eliminados", eliminados)
             st.divider()
         with col2:
-        st.markdown("### 📊 Média das Notas por Prova (somente presentes)")
-    
-        medias = {
-            'Ciências Humanas': df.loc[df['TP_PRESENCA_CH'] == 1, 'NU_NOTA_CH'].mean(),
-            'Ciências da Natureza': df.loc[df['TP_PRESENCA_CN'] == 1, 'NU_NOTA_CN'].mean(),
-            'Matemática': df.loc[df['TP_PRESENCA_MT'] == 1, 'NU_NOTA_MT'].mean(),
-            'Linguagens': df.loc[df['TP_PRESENCA_LC'] == 1, 'NU_NOTA_LC'].mean(),
-            'Redação': df.loc[df['TP_PRESENCA_LC'] == 1, 'NU_NOTA_REDACAO'].mean()
-        }
-    
-        df_medias = (
-            pd.DataFrame.from_dict(medias, orient='index', columns=['Média'])
-            .reset_index()
-            .rename(columns={'index': 'Prova'})
-        )
-    
-        fig = px.bar(
-            df_medias,
-            x='Prova',
-            y='Média',
-            title='Média das Notas por Área'
-        )
-    
-        st.plotly_chart(fig, use_container_width=True)
-    
+            st.markdown("### 📊 Média das Notas por Prova (somente presentes)")
+        
+            medias = {
+                'Ciências Humanas': df.loc[df['TP_PRESENCA_CH'] == 1, 'NU_NOTA_CH'].mean(),
+                'Ciências da Natureza': df.loc[df['TP_PRESENCA_CN'] == 1, 'NU_NOTA_CN'].mean(),
+                'Matemática': df.loc[df['TP_PRESENCA_MT'] == 1, 'NU_NOTA_MT'].mean(),
+                'Linguagens': df.loc[df['TP_PRESENCA_LC'] == 1, 'NU_NOTA_LC'].mean(),
+                'Redação': df.loc[df['TP_PRESENCA_LC'] == 1, 'NU_NOTA_REDACAO'].mean()
+            }
+        
+            df_medias = (
+                pd.DataFrame.from_dict(medias, orient='index', columns=['Média'])
+                .reset_index()
+                .rename(columns={'index': 'Prova'})
+            )
+        
+            fig = px.bar(
+                df_medias,
+                x='Prova',
+                y='Média',
+                title='Média das Notas por Área'
+            )
+        
+            st.plotly_chart(fig, use_container_width=True)
+        
