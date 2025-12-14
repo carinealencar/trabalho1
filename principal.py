@@ -200,9 +200,9 @@ st.markdown("###📮 Desempenho em instituições de ensino pela nota")
 
 #ufs = sorted(df['SG_UF_ESC'].dropna().unique())
 
-uf_selecionada = st.selectbox(
-    'Selecione a UF da escola'
-)
+#uf_selecionada = st.selectbox(
+ #   'Selecione a UF da escola: ufs'
+#)
 
 df_uf = df[df['SG_UF_ESC'] == uf_selecionada]
 
