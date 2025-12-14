@@ -158,11 +158,9 @@ if botao:
                     (df['TP_PRESENCA_CH'] == 1) & (df['TP_PRESENCA_CN'] == 1) & (df['TP_PRESENCA_MT'] == 1) & (df['TP_PRESENCA_LC'] == 1) & (df['TP_FAIXA_ETARIA'].notna())
         ].copy()
         df_faixa['Faixa Etária'] = df_faixa['TP_FAIXA_ETARIA'].map(m_faixa_etaria)
-        df_faixa = df_faixa.dropna(subset=['Faixa Etária'])
         df_faixa['MEDIA_GERAL'] = df_faixa[['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']].mean(axis=1)
-        df_media_faixa = (df_faixa.groupby('Faixa Etária')['MEDIA_GERAL'].mean().reset_index())
-        df_media_faixa = df_media_faixa.sort_values('Faixa Etária')
-        
+        df_media_faixa = (df_faixa.groupby('Faixa Etária')['MEDIA_GERAL'].mean().reset_index().sort_valeus('TP_FAIXA_ETARIA'))
+                
         fig_faixa = px.bar(
             df_media_faixa,
             x='MEDIA_GERAL',
