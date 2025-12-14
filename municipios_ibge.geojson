@@ -1,2 +1,4 @@
+import json
+
 with open('municipios_ibge.geojson', 'r', encoding='utf-8') as f:
     geojson_municipios = json.load(f)
