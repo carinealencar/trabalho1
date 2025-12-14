@@ -33,7 +33,7 @@ st.header('Filtros:')
 ano = st.selectbox('Escolha o ano para a análise:', 
                    ('2020', '2021', '2022', '2023'))
 filtro = st.selectbox('Escolha uma variável para análise:', 
-                      sorted(['Renda', 'Ano de conclusão', 'Raça']))
+                      sorted(['Renda', 'Raça']))
 
 if filtro == 'Renda':
     salario = st.selectbox(
@@ -60,6 +60,28 @@ m_raca = {
     'Amarelo': 4,
     'Indígena': 5,
     'Não declarado': 0
+}
+m_faixa_etaria = {
+    1: 'Menor de 17 anos',
+    2: '17 anos',
+    3: '18 anos',
+    4: '19 anos',
+    5: '20 anos',
+    6: '21 anos',
+    7: '22 anos',
+    8: '23 anos',
+    9: '24 anos',
+    10: '25 anos',
+    11: '26 a 30 anos',
+    12: '31 a 35 anos',
+    13: '36 a 40 anos',
+    14: '41 a 45 anos',
+    15: '46 a 50 anos',
+    16: '51 a 55 anos',
+    17: '56 a 60 anos',
+    18: '61 a 65 anos',
+    19: '66 a 70 anos',
+    20: 'Maior de 70 anos'
 }
 
 botao = st.button('Exibir gráficos')
@@ -131,26 +153,12 @@ if botao:
         st.plotly_chart(fig_sexo, use_container_width=True)
     with col2:
         st.markdown("### 📊 Média Geral das Notas por Faixa Etária")
-    
+
         df_faixa = df[
-            (df['TP_PRESENCA_CH'] == 1) &
-            (df['TP_PRESENCA_CN'] == 1) &
-            (df['TP_PRESENCA_MT'] == 1) &
-            (df['TP_PRESENCA_LC'] == 1) &
-            (df['TP_FAIXA_ETARIA'].notna())
+            (df['TP_PRESENCA_CH'] == 1) & (df['TP_PRESENCA_CN'] == 1) & (df['TP_PRESENCA_MT'] == 1) & (df['TP_PRESENCA_LC'] == 1) & (df['TP_FAIXA_ETARIA'].notna())
         ].copy()
-    
-        df_faixa['MEDIA_GERAL'] = df_faixa[
-            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-        ].mean(axis=1)
-    
-        df_media_faixa = (
-            df_faixa
-            .groupby('TP_FAIXA_ETARIA')['MEDIA_GERAL']
-            .mean()
-            .reset_index()
-            .sort_values('TP_FAIXA_ETARIA')
-        )
+        df_faixa['MEDIA_GERAL'] = df_faixa[['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']].mean(axis=1)
+        df_media_faixa = (df_faixa.groupby('TP_FAIXA_ETARIA')['MEDIA_GERAL'].mean().reset_index().sort_values('TP_FAIXA_ETARIA'))
     
         fig_faixa = px.bar(
             df_media_faixa,
@@ -158,7 +166,7 @@ if botao:
             y='TP_FAIXA_ETARIA',
             orientation='h',
             labels={
-                'TP_FAIXA_ETARIA': 'Faixa Etária (código ENEM)',
+                'TP_FAIXA_ETARIA': 'Faixa Etária',
                 'MEDIA_GERAL': 'Média Geral das Notas'
             }
         )
