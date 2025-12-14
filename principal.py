@@ -51,29 +51,60 @@ if botao:
     caminho_arquivo = FILE_PATHS[ano]
     df = load_data(caminho_arquivo)
 
-    # Calculando a média geral
-    df['MEDIA_GERAL'] = df[
-        ['NU_NOTA_MT', 'NU_NOTA_LC', 'NU_NOTA_CH', 'NU_NOTA_CN']
-    ].mean(axis=1)
-
     st.subheader(f"Resultados e Análise do ENEM {ano}")
-    st.write(f"Total de participantes para a análise: **{len(df)}**")
 
     col1, col2 = st.columns([1, 2])
 
-    # MÉTRICA
+    # =========================
+    # COLUNA 1 — PLACAR
+    # =========================
     with col1:
-        st.metric(
-            label="Média Geral das Notas",
-            value=f"{df['MEDIA_GERAL'].mean():.2f}"
+        st.markdown("### 📋 Placar de Presença nas Provas")
+
+        provas = {
+            'CH': 'TP_PRESENCA_CH',
+            'CN': 'TP_PRESENCA_CN',
+            'MT': 'TP_PRESENCA_MT',
+            'LC': 'TP_PRESENCA_LC'
+        }
+
+        for prova, coluna in provas.items():
+            contagem = df[coluna].value_counts().sort_index()
+
+            ausentes = contagem.get(0, 0)
+            presentes = contagem.get(1, 0)
+            eliminados = contagem.get(2, 0)
+
+            st.markdown(f"**{prova}**")
+            st.metric("🟢 Presentes", presentes)
+            st.metric("🔴 Ausentes", ausentes)
+            st.metric("⚫ Eliminados", eliminados)
+            st.divider()
+
+    # =========================
+    # COLUNA 2 — GRÁFICO DE MÉDIAS
+    # =========================
+    with col2:
+        st.markdown("### 📊 Média das Notas por Prova")
+
+        medias = {
+            'Ciências Humanas': df['NU_NOTA_CH'].mean(),
+            'Ciências da Natureza': df['NU_NOTA_CN'].mean(),
+            'Matemática': df['NU_NOTA_MT'].mean(),
+            'Linguagens': df['NU_NOTA_LC'].mean()
+        }
+
+        df_medias = (
+            pd.DataFrame.from_dict(medias, orient='index', columns=['Média'])
+            .reset_index()
+            .rename(columns={'index': 'Prova'})
         )
 
-    # GRÁFICO
-    with col2:
-        fig = px.histogram(
-            df,
-            x='MEDIA_GERAL',
-            nbins=30,
-            title='Distribuição da Média Geral das Notas'
+        fig = px.bar(
+            df_medias,
+            x='Prova',
+            y='Média',
+            title='Média das Notas por Área'
         )
+
         st.plotly_chart(fig, use_container_width=True)
