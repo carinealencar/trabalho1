@@ -215,7 +215,7 @@ df_desempenho = (
 fig = px.bar(
     df_desempenho,
     x='Tipo de Instituição de ensino',
-    y='Nota''
+    y='Nota'
 )
 
 st.plotly_chart(fig, use_container_width=True)
