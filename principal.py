@@ -196,28 +196,9 @@ if botao:
     
 st.markdown("### Desempenho em instituições de ensino x nota")
 
-desempenho = {
-    'No município': no_municipio_esc,
-    'No estado': sg_uf_esc
-}
+import numpy as np 
+from scipy import stats
 
-df_desempenho = (
-    pd.DataFrame.from_dict(
-        desempenho,
-        orient='index',
-        columns=['Nota']
-    )
-    .reset_index()
-    .rename(columns={'index': 'Tipo de Instituição de ensino'})
-)
-
-fig = px.bar(
-    df_desempenho,
-    x='Tipo de Instituição de ensino',
-    y='Nota'
-)
-
-st.plotly_chart(fig, use_container_width=True)
 
 
 
