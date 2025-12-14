@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import plotly.express as px
 import json
-import mathplotlib
+
 
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
