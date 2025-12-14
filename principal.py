@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import os
 import plotly.express as px
+import json
+
+with open('municipios_ibge.geojson', 'r', encoding='utf-8') as f:
+    geojson_municipios = json.load(f)
+
 
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
@@ -177,82 +182,43 @@ if botao:
     st.markdown("### 🗺️ Mapa Interativo – Média Geral do ENEM por Estado")
 
     #Gráfico de mapa
-    st.markdown("### 🗺️ Mapa Interativo – Média Geral do ENEM por Estado")
+    st.markdown("### 🗺️ Mapa Municipal – Total de Participantes")
     
     df_mapa = df[
         (df['TP_PRESENCA_CH'] == 1) &
         (df['TP_PRESENCA_CN'] == 1) &
         (df['TP_PRESENCA_MT'] == 1) &
         (df['TP_PRESENCA_LC'] == 1) &
-        (df['SG_UF_ESC'].notna())
+        (df['CO_MUNICIPIO_ESC'].notna())
     ].copy()
     
-    df_mapa['MEDIA_GERAL'] = df_mapa[
-        ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-    ].mean(axis=1)
+    # garantir tipo correto
+    df_mapa['CO_MUNICIPIO_ESC'] = df_mapa['CO_MUNICIPIO_ESC'].astype(int)
     
-    df_mapa_estado = (
+    # contagem absoluta por município
+    df_municipio = (
         df_mapa
-        .groupby('SG_UF_ESC')['MEDIA_GERAL']
-        .mean()
-        .reset_index()
+        .groupby('CO_MUNICIPIO_ESC')
+        .size()
+        .reset_index(name='TOTAL_PARTICIPANTES')
+    )
+    fig_mapa_mun = px.choropleth_mapbox(
+        df_municipio,
+        geojson=geojson_municipios,
+        locations='CO_MUNICIPIO_ESC',
+        featureidkey='properties.id',  # ajuste se necessário
+        color='TOTAL_PARTICIPANTES',
+        color_continuous_scale='Turbo',
+        mapbox_style='carto-positron',
+        zoom=4,
+        center={'lat': -14, 'lon': -52},
+        opacity=0.75,
+        height=650,
+        labels={'TOTAL_PARTICIPANTES': 'Total de Participantes'}
     )
     
-    coords_uf = {
-        'AC': (-9.97499, -67.8243),
-        'AL': (-9.5713, -36.782),
-        'AP': (0.0349, -51.0694),
-        'AM': (-3.119, -60.0217),
-        'BA': (-12.9718, -38.5011),
-        'CE': (-3.7319, -38.5267),
-        'DF': (-15.7939, -47.8828),
-        'ES': (-20.3155, -40.3128),
-        'GO': (-16.6869, -49.2648),
-        'MA': (-2.5307, -44.3068),
-        'MT': (-15.601, -56.0979),
-        'MS': (-20.4697, -54.6201),
-        'MG': (-19.9167, -43.9345),
-        'PA': (-1.4558, -48.5039),
-        'PB': (-7.1195, -34.845),
-        'PR': (-25.4284, -49.2733),
-        'PE': (-8.0476, -34.877),
-        'PI': (-5.0919, -42.8034),
-        'RJ': (-22.9068, -43.1729),
-        'RN': (-5.7945, -35.211),
-        'RS': (-30.0346, -51.2177),
-        'RO': (-8.7608, -63.8999),
-        'RR': (2.8235, -60.6758),
-        'SC': (-27.5949, -48.5482),
-        'SP': (-23.5505, -46.6333),
-        'SE': (-10.9472, -37.0731),
-        'TO': (-10.184, -48.3336)
-    }
-    
-    df_coords = (
-        pd.DataFrame.from_dict(coords_uf, orient='index', columns=['lat', 'lon'])
-        .reset_index()
-        .rename(columns={'index': 'SG_UF_ESC'})
+    fig_mapa_mun.update_layout(
+        margin={"r":0,"t":0,"l":0,"b":0}
     )
     
-    df_mapa_estado = df_mapa_estado.merge(df_coords, on='SG_UF_ESC')
-    
-    fig_mapa = px.scatter_mapbox(
-        df_mapa_estado,
-        lat='lat',
-        lon='lon',
-        size='MEDIA_GERAL',
-        color='MEDIA_GERAL',
-        hover_name='SG_UF_ESC',
-        hover_data={'MEDIA_GERAL': ':.2f'},
-        zoom=3,
-        height=600,
-        color_continuous_scale='Viridis'
-    )
-    
-    fig_mapa.update_layout(
-        mapbox_style="carto-positron",
-        margin={"r": 0, "t": 0, "l": 0, "b": 0}
-    )
-    
-    st.plotly_chart(fig_mapa, use_container_width=True)
-        
+    st.plotly_chart(fig_mapa_mun, use_container_width=True)
