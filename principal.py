@@ -50,7 +50,7 @@ if filtro == 'Renda':
 if filtro == 'Raça':
     raca = st.selectbox(
         'Escolha a raça a analisar:',
-        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não declarado']) # CORRIGIDO: 'Não informado' para 'Não declarado'
+        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não declarado']) 
 
 m_renda = {
     'Nenhuma renda': ['A'],
@@ -98,12 +98,7 @@ if botao:
     caminho_arquivo = FILE_PATHS[ano]
     df = load_data(caminho_arquivo)
     st.subheader(f"Resultados e Análise do ENEM {ano}")
-    
-    # 🐛 Correção Lógica e Filtro
-    # No seu código original: `if filtro == 'Raça': ... raca = st.selectbox(...)`
-    # O `selectbox` tinha a opção 'Não informado', mas o dicionário `m_raca`
-    # tinha a chave 'Não declarado'. Corrigi a opção do selectbox acima para 
-    # 'Não declarado' para corresponder à chave do dicionário.
+  
     if filtro == 'Renda':
         df = df[df['Q006'].isin(m_renda[salario])]
     if filtro == 'Raça':
@@ -152,19 +147,19 @@ if botao:
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("### 📦 Distribuição das Notas por Sexo")
-        
-        fig_sexo = px.box(
-            df_media,
-            x='TP_SEXO',
-            y='MEDIA_GERAL',
-            labels={
-                'TP_SEXO': 'Sexo',
-                'MEDIA_GERAL': 'Nota Média'
-            }
-        )
-        
-        st.plotly_chart(fig_sexo, use_container_width=True)
+        st.markdown("### 📦 Distribuição das Notas por Sexo")
+        
+        fig_sexo = px.box(
+            df_media,
+            x='TP_SEXO',
+            y='MEDIA_GERAL',
+            labels={
+                'TP_SEXO': 'Sexo',
+                'MEDIA_GERAL': 'Nota Média'
+            }
+        )
+        
+        st.plotly_chart(fig_sexo, use_container_width=True)
     with col2:
       st.markdown("### 📊 Média Geral das Notas por Faixa Etária")
       
