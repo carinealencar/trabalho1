@@ -198,7 +198,7 @@ if botao:
 #gráfico de instituição de tipo de instituição de ensino pela nota     
 st.markdown("###📮 Desempenho em instituições de ensino pela nota")
 
-ufs = sorted(df['SG_UF_ESC'].dropna().unique())
+#ufs = sorted(df['SG_UF_ESC'].dropna().unique())
 
 uf_selecionada = st.selectbox(
     'Selecione a UF da escola:',
