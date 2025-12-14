@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import plotly.express as px
 import json
-import mathplotlib
+
 
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
@@ -193,6 +193,15 @@ if botao:
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
 
-pip install mathplotlib
+    
+
+# Gráfico de barras de instituição de ensino versus nota
+    st.markdown("### Desempenho em instituições de ensino x nota")
+    desempenho = {'no_municipio_esc', 'sg_uf_esc'}
+    df_desempenho = (pd.Dataframe.from_dict(desempenho, orient='index', colums=['Instituição de ensino']).reset_index().rename(colums={'index': 'Tipo de Instituição'}))
+#df_medias = (pd.DataFrame.from_dict(medias, orient='index', columns=['Média']).reset_index().rename(columns={'index': 'Prova'}))
+    #fig = px.bar(df_medias, x='Prova', y='Média', title='Média das Notas por Área')
+    fig = px.bar(df_desempenho, x='Tipo de instituição', y='Desempenho', title='Tipo de instituições de ensino vesus nota entre os anos de 2020 a 2023, no Brasil')
+    st.plotly_chart(fig, use_container_width=True)
 
     
