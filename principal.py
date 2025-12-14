@@ -192,20 +192,16 @@ if botao:
             st.plotly_chart(fig_faixa, use_container_width=True)
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
-            
-#no_municio_esc = nome do municipio da escola
- #sg_uf_esc = sigla da unidade da federação da escola
-    #gráfico de instituição de tipo de instituição de ensino pela nota     
-st.markdown("###📮 Desempenho em instituições de ensino pela nota")
+
+
+#gráfico de instituição de tipo de instituição de ensino pela nota     
+st.markdown("### 📮 Desempenho em instituições de ensino pela nota")
 
 regiao = st.selectbox('Escolha uma variável para análise:',
-                      sorted(df['SG_UF_ESC'].dropna().unique())
+                      sorted(df['SG_UF_ESC']))
 
+                 
 #ufs = sorted(df['SG_UF_ESC'].dropna().unique())
-
-#uf_selecionada = st.selectbox(
- #   'Selecione a UF da escola: ufs'
-#)
 
 df_uf = df[df['SG_UF_ESC'] == uf_selecionada]
 
