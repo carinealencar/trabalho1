@@ -53,7 +53,7 @@ if filtro == 'Raça':
 m_renda = {
     'Nenhuma renda': ['A'],
     'Até 1 salário mínimo': ['B'],
-    'Entre 1 e 3 salários mínimos': ['B', 'C', 'D'],
+    'Entre 1 e 3 salários mínimos': ['C', 'D'],
     'Entre 3 e 6 salários mínimos': ['E', 'F', 'G'],
     'Acima de 6 salários mínimos': ['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 }
@@ -87,6 +87,12 @@ if botao:
     
     if filtro == 'Raça':
         df = df[df['TP_COR_RACA'] == m_raca[raca]]
+
+    st.write(f"Total de participantes após filtros: {len(df)}")
+
+    if len(df) == 0:
+        st.warning("Nenhum dado encontrado para os filtros selecionados.")
+        st.stop()
 
 
     #Placar ausentes, presentes, eliminados
