@@ -195,18 +195,12 @@ if botao:
 
     
 st.markdown("### Desempenho em instituições de ensino x nota")
-
-import numpy as np 
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 tp_dependencia_adm_esc = {
     1: 'Federal',
     2: 'Estadual',
     3: 'Municipal',
     4: 'Privada'
 }
-
 
 # Gráfico de instituição de ensino e região
 #colors = {'Yes': 'red', 'No': 'blue'}
