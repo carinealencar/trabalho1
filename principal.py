@@ -196,17 +196,20 @@ if botao:
     
 st.markdown("### Desempenho em instituições de ensino x nota")
 
-# )
 desempenho = {
-    'no_municipio_esc',
-    'sg_uf_esc'
+    'No município': df['no_municipio_esc'].mean(),
+    'No estado': df['sg_uf_esc'].mean()
+}
+desempenho = {
+    'No município': no_municipio_esc,
+    'No estado': sg_uf_esc
 }
 
 df_desempenho = (
     pd.DataFrame.from_dict(
         desempenho,
         orient='index',
-        columns=['Notas']
+        columns=['Nota']
     )
     .reset_index()
     .rename(columns={'index': 'Tipo de Instituição de ensino'})
@@ -219,6 +222,7 @@ fig = px.bar(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
 
 
     
