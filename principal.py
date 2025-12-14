@@ -3,12 +3,6 @@ import pandas as pd
 import os
 import plotly.express as px
 import json
-import os
-import streamlit as st
-
-st.write("Arquivos:", os.listdir("."))
-st.write("Pages:", os.listdir("pages") if os.path.exists("pages") else "SEM PASTA")
-
 
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
