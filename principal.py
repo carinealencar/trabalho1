@@ -153,7 +153,10 @@ if botao:
         st.plotly_chart(fig_sexo, use_container_width=True)
     with col2:
         st.markdown("### 📊 Média Geral das Notas por Faixa Etária")
-        
+
+        df_faixa = df[
+            (df['TP_PRESENCA_CH'] == 1) & (df['TP_PRESENCA_CN'] == 1) & (df['TP_PRESENCA_MT'] == 1) & (df['TP_PRESENCA_LC'] == 1) & (df['TP_FAIXA_ETARIA'].notna())
+        ].copy()
         df_faixa['Faixa Etária'] = df_faixa['TP_FAIXA_ETARIA'].map(m_faixa_etaria)
         df_faixa['MEDIA_GERAL'] = df_faixa[['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']].mean(axis=1)
         df_media_faixa = (df_faixa.groupby('TP_FAIXA_ETARIA')['MEDIA_GERAL'].mean().reset_index().sort_values('TP_FAIXA_ETARIA'))
