@@ -50,40 +50,29 @@ botao = st.button('Exibir gráficos')
 if botao:
     caminho_arquivo = FILE_PATHS[ano]
     df = load_data(caminho_arquivo)
-
     st.subheader(f"Resultados e Análise do ENEM {ano}")
 
     col1, col2 = st.columns([1, 2])
-
-    # =========================
-    # COLUNA 1 — PLACAR
-    # =========================
     with col1:
         st.markdown("### 📋 Placar de Presença nas Provas")
-
         provas = {
-            'CH': 'TP_PRESENCA_CH',
-            'CN': 'TP_PRESENCA_CN',
-            'MT': 'TP_PRESENCA_MT',
-            'LC': 'TP_PRESENCA_LC'
+            'Ciências Humanas': 'TP_PRESENCA_CH',
+            'Ciências da Natureza': 'TP_PRESENCA_CN',
+            'Matemática': 'TP_PRESENCA_MT',
+            'Linguagens': 'TP_PRESENCA_LC'
         }
-
         for prova, coluna in provas.items():
             contagem = df[coluna].value_counts().sort_index()
-
+            
             ausentes = contagem.get(0, 0)
             presentes = contagem.get(1, 0)
             eliminados = contagem.get(2, 0)
 
             st.markdown(f"**{prova}**")
-            st.metric("🟢 Presentes", presentes)
-            st.metric("🔴 Ausentes", ausentes)
-            st.metric("⚫ Eliminados", eliminados)
+            st.metric("Presentes", presentes)
+            st.metric("Ausentes", ausentes)
+            st.metric("Eliminados", eliminados)
             st.divider()
-
-    # =========================
-    # COLUNA 2 — GRÁFICO DE MÉDIAS
-    # =========================
     with col2:
         st.markdown("### 📊 Média das Notas por Prova")
 
@@ -91,14 +80,9 @@ if botao:
             'Ciências Humanas': df['NU_NOTA_CH'].mean(),
             'Ciências da Natureza': df['NU_NOTA_CN'].mean(),
             'Matemática': df['NU_NOTA_MT'].mean(),
-            'Linguagens': df['NU_NOTA_LC'].mean()
+            'Linguagens': df['NU_NOTA_LC'].mean(),
+            'Redação': df['NU_NOTA_REDACAO'].mean()
         }
-
-        df_medias = (
-            pd.DataFrame.from_dict(medias, orient='index', columns=['Média'])
-            .reset_index()
-            .rename(columns={'index': 'Prova'})
-        )
 
         fig = px.bar(
             df_medias,
