@@ -198,6 +198,7 @@ if botao:
         .size()
         .reset_index(name='TOTAL_PARTICIPANTES')
     )
+    df.columns = df.columns.str.strip()
     fig_mapa_mun = px.choropleth_mapbox(
         df_municipio,
         geojson=geojson_municipios,
