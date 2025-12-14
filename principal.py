@@ -193,27 +193,8 @@ if botao:
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
 
-
-#gráfico de instituição de tipo de instituição de ensino pela nota     
-st.markdown("### 📮 Desempenho em instituições de ensino pela nota")
-
-                 
-df_mun = (
-    df
-    .groupby('NO_MUNICIPIO_ESC')['NU_NOTA_MT']
-    .mean()
-    .sort_values(ascending=False)
-    .head(10)
-    .reset_index()
-)
-
-px.bar(
-    df_mun,
-    x='NO_MUNICIPIO_ESC',
-    y='NU_NOTA_MT',
-    title='Top 10 municípios por média de Matemática'
-)
-
+with col3:
+        st.markdown("### 📮 Instituição de ensino por nota")
 
 
 
