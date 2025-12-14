@@ -115,33 +115,3 @@ if botao:
     fig = px.bar(df_medias, x='Prova', y='Média', title='Média das Notas por Área')
     st.plotly_chart(fig, use_container_width=True)
 
-    
-    col1, col2 = st.columns(2)
-    #Gráfico sexo x notas
-    with col1:
-        st.markdown("### 📦 Distribuição das Notas por Sexo")
-        fig_sexo = px.box(
-            df_media, x='TP_SEXO', y='MEDIA_GERAL',
-            labels={'TP_SEXO': 'Sexo', 'MEDIA_GERAL': 'Nota Média'}
-        )    
-        st.plotly_chart(fig_sexo, use_container_width=True)
-    with col2:
-        st.markdown("### 📊 Média das Notas por Faixa Etária")
-        df_faixa = (
-            df_media.groupby('FAIXA_ETARIA', observed=True)['MEDIA_GERAL'].mean().reset_index()
-        )    
-        fig_faixa = px.bar(
-            df_faixa,
-            x='FAIXA_ETARIA',
-            y='MEDIA_GERAL',
-            orientation='h',
-            labels={
-                'FAIXA_ETARIA': 'Faixa Etária',
-                'MEDIA_GERAL': 'Nota Média'
-            }
-        )
-    
-        st.plotly_chart(fig_faixa, use_container_width=True)
-    
-    
-    
