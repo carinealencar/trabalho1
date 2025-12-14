@@ -4,16 +4,6 @@ import os
 import plotly.express as px
 import json
 
-# --- Otimização: Cache para o arquivo GeoJSON ---
-@st.cache_data
-def load_geojson(path):
-    # Certifique-se de que o arquivo 'municipios_ibge.geojson.json' está no mesmo diretório
-    with open(path, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-geojson_municipios = load_geojson('municipios_ibge.geojson.json')
-# ---------------------------------------------------
-
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
     page_icon="📊",
@@ -27,6 +17,15 @@ FILE_PATHS = {
     '2022': 'ENEM_2022_FILTRADO_LIMPO.zip',
     '2023': 'ENEM_2023_FILTRADO_LIMPO.zip'
 }
+
+@st.cache_data
+def load_geojson(path):
+    # Certifique-se de que o arquivo 'municipios_ibge.geojson.json' está no mesmo diretório
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+geojson_municipios = load_geojson('municipios_ibge.geojson.json')
+
 
 @st.cache_data
 def load_data(path):
@@ -103,13 +102,6 @@ if botao:
     df = load_data(caminho_arquivo)
     st.subheader(f"Resultados e Análise do ENEM {ano}")
     
-    # 🚨 CORREÇÃO DE ERRO 1: Coerção para garantir que colunas de notas sejam numéricas 🚨
-    COLUNAS_NOTAS = ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC', 'NU_NOTA_REDACAO']
-    for col in COLUNAS_NOTAS:
-        # Força o tipo de dado para numérico. Erros (como strings vazias) são transformados em NaN.
-        df[col] = pd.to_numeric(df[col], errors='coerce') 
-
-    # Aplica os filtros de Renda/Raça
     if filtro == 'Renda':
         df = df[df['Q006'].isin(m_renda[salario])]
     if filtro == 'Raça':
@@ -200,14 +192,10 @@ if botao:
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
     
-    # ----------------------------------------------------
-    # MAPA MUNICIPAL DE MÉDIA GERAL (CORRIGIDO)
-    # ----------------------------------------------------
     st.markdown("### 🗺️ Mapa Municipal – Média Geral das Notas por Escola")
     
-    COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC' 
+    COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC'
     
-    # 1. Filtro para Participantes Presentes e com Código de Município
     df_mapa = df[
     (df['TP_PRESENCA_CH'] == 1) &
     (df['TP_PRESENCA_CN'] == 1) &
@@ -216,48 +204,42 @@ if botao:
     (df[COLUNA_MUNICIPIO].notna())
     ].copy()
     
-    # 🚨 CORREÇÃO DE ERRO 2: Checagem antes de processar o mapa 🚨
-    if df_mapa.empty: 
-        st.warning("Nenhum participante encontrado que atenda a TODOS os filtros (Renda/Raça E presença nas 4 provas). O mapa não pode ser gerado.")
-    else:
-        # 2. Cálculo da Média Geral (Só se houver dados)
-        df_mapa['MEDIA_GERAL'] = df_mapa[
+    df_mapa['MEDIA_GERAL'] = df_mapa[
             ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-        ].mean(axis=1)
-        
-        # 3. Tratamento dos Dados da Coluna de Município (CRUCIAL para o GeoJSON)
-        df_mapa[COLUNA_MUNICIPIO] = (
-            df_mapa[COLUNA_MUNICIPIO]
-            .astype(int, errors='ignore') # Converte float (X.0) para int (X)
-            .astype(str)                  # Converte int (X) para string ('X')
-        )
-        
-        # 4. Agrupamento e Cálculo da Média por Município
-        df_municipio_media = (
-            df_mapa
-            .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
-            .mean() 
-            .reset_index(name='MEDIA_MUNICIPIO')
-        )
-        
-        # 5. Criação do Mapa Coroplético
-        fig_mapa_mun = px.choropleth_mapbox(
-            df_municipio_media,
-            geojson=geojson_municipios,
-            locations=COLUNA_MUNICIPIO,
-            featureidkey='properties.id',
-            color='MEDIA_MUNICIPIO',
-            color_continuous_scale='Turbo',
-            mapbox_style='carto-positron',
-            zoom=3,
-            center={'lat': -14, 'lon': -52},
-            opacity=0.75,
-            height=650,
-            labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
-        )
-        
-        fig_mapa_mun.update_layout(
-            margin={"r":0,"t":0,"l":0,"b":0}
-        )
-        
-        st.plotly_chart(fig_mapa_mun, use_container_width=True)
+    ].mean(axis=1)
+    
+    # 3. Tratamento dos Dados da Coluna de Município (CRUCIAL para o GeoJSON)
+    df_mapa[COLUNA_MUNICIPIO] = (
+        df_mapa[COLUNA_MUNICIPIO]
+        .astype(int, errors='ignore') 
+        .astype(str)               
+    )
+    
+    df_municipio_media = (
+        df_mapa
+        .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
+        .mean() 
+        .reset_index(name='MEDIA_MUNICIPIO')
+    )
+    
+    # 5. Criação do Mapa Coroplético
+    fig_mapa_mun = px.choropleth_mapbox(
+        df_municipio_media,
+        geojson=geojson_municipios,
+        locations=COLUNA_MUNICIPIO,
+        featureidkey='properties.id',
+        color='MEDIA_MUNICIPIO',
+        color_continuous_scale='Turbo',
+        mapbox_style='carto-positron',
+        zoom=3,
+        center={'lat': -14, 'lon': -52},
+        opacity=0.75,
+        height=650,
+        labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
+    )
+    
+    fig_mapa_mun.update_layout(
+        margin={"r":0,"t":0,"l":0,"b":0}
+    )
+    
+    st.plotly_chart(fig_mapa_mun, use_container_width=True)
