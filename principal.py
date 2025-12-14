@@ -151,7 +151,7 @@ if botao:
         )
     
         st.plotly_chart(fig_sexo, use_container_width=True)
-   with col2:
+       with col2:
         st.markdown("### 📊 Média Geral das Notas por Faixa Etária")
     
         df_faixa = df[
