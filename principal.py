@@ -130,15 +130,38 @@ if botao:
     
         st.plotly_chart(fig_sexo, use_container_width=True)
     with col2:
-        st.markdown("### 📊 Frequência por Faixa Etária")
-        df_freq = (df_media['TP_FAIXA_ETARIA'].value_counts().sort_index().reset_index())
-        df_freq.columns = ['Faixa Etária (código)', 'Frequência']
-        
-        fig_faixa = px.bar(
-            df_freq,
-            x='Frequência',
-            y='Faixa Etária (código)',
-            orientation='h'
+        st.markdown("### 📊 Média Geral das Notas por Faixa Etária")
+    
+        df_faixa = df[
+            (df['TP_PRESENCA_CH'] == 1) &
+            (df['TP_PRESENCA_CN'] == 1) &
+            (df['TP_PRESENCA_MT'] == 1) &
+            (df['TP_PRESENCA_LC'] == 1) &
+            (df['TP_FAIXA_ETARIA'].notna())
+        ].copy()
+    
+        df_faixa['MEDIA_GERAL'] = df_faixa[
+            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+        ].mean(axis=1)
+    
+        df_media_faixa = (
+            df_faixa
+            .groupby('TP_FAIXA_ETARIA')['MEDIA_GERAL']
+            .mean()
+            .reset_index()
+            .sort_values('TP_FAIXA_ETARIA')
         )
-        
+    
+        fig_faixa = px.bar(
+            df_media_faixa,
+            x='MEDIA_GERAL',
+            y='TP_FAIXA_ETARIA',
+            orientation='h',
+            labels={
+                'TP_FAIXA_ETARIA': 'Faixa Etária (código ENEM)',
+                'MEDIA_GERAL': 'Média Geral das Notas'
+            }
+        )
+    
         st.plotly_chart(fig_faixa, use_container_width=True)
+
