@@ -197,11 +197,11 @@ if botao:
     COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC'
     
     df_mapa = df[
-    (df['TP_PRESENCA_CH'] == 1) &
-    (df['TP_PRESENCA_CN'] == 1) &
-    (df['TP_PRESENCA_MT'] == 1) &
-    (df['TP_PRESENCA_LC'] == 1) &
-    (df[COLUNA_MUNICIPIO].notna())
+        (df['TP_PRESENCA_CH'] == 1) &
+        (df['TP_PRESENCA_CN'] == 1) &
+        (df['TP_PRESENCA_MT'] == 1) &
+        (df['TP_PRESENCA_LC'] == 1) &
+        (df[COLUNA_MUNICIPIO].notna())
     ].copy()
     
     df_mapa['MEDIA_GERAL'] = df_mapa[
