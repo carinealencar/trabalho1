@@ -40,11 +40,6 @@ if filtro == 'Renda':
         'Escolha a faixa salarial:',
         ['Nenhuma renda', 'Até 1 salário mínimo', 'Entre 1 e 3 salários mínimos', 'Entre 3 e 6 salários mínimos', 'Acima de 6 salários mínimos'])
 
-if filtro == 'Ano de conclusão':
-    ano_c = st.selectbox(
-        'Escolha o período do ano de conclusão:',
-        ['Entre 2007 e 2012', 'Entre 2013 e 2018', 'Nos últimos anos'])
-
 if filtro == 'Raça':
     raca = st.selectbox(
         'Escolha a raça a analisar:',
@@ -56,12 +51,6 @@ m_renda = {
     'Entre 1 e 3 salários mínimos': ['C', 'D'],
     'Entre 3 e 6 salários mínimos': ['E', 'F', 'G'],
     'Acima de 6 salários mínimos': ['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
-}
-
-m_conclusao = {
-    'Entre 2007 e 2012': [12, 13, 14, 15],
-    'Entre 2013 e 2018': [6, 7, 8, 9, 10, 11],
-    'Nos últimos anos': [1, 2, 3, 4, 5]
 }
 
 m_raca = {
@@ -81,10 +70,6 @@ if botao:
     st.subheader(f"Resultados e Análise do ENEM {ano}")
     if filtro == 'Renda':
         df = df[df['Q006'].isin(m_renda[salario])]
-
-    if filtro == 'Ano de conclusão':
-        df = df[df['TP_ANO_CONCLUIU'].isin(m_conclusao[ano_c])]
-    
     if filtro == 'Raça':
         df = df[df['TP_COR_RACA'] == m_raca[raca]]
 
@@ -120,4 +105,65 @@ if botao:
     df_medias = (pd.DataFrame.from_dict(medias, orient='index', columns=['Média']).reset_index().rename(columns={'index': 'Prova'}))
     fig = px.bar(df_medias, x='Prova', y='Média', title='Média das Notas por Área')
     st.plotly_chart(fig, use_container_width=True)
+
+    df_media = df.copy()
+
+    df_media['MEDIA_GERAL'] = df_media[
+        ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+    ].mean(axis=1)
+    
+    df_media = df_media.dropna(subset=['MEDIA_GERAL'])
+
+    def agrupar_faixa(valor):
+    if valor in [1, 2, 3]:
+        return '1 a 3'
+    if 4 <= valor <= 10:
+        return '4 a 10'
+    if 11 <= valor <= 13:
+        return '11 a 13'
+    if 14 <= valor <= 17:
+        return '14 a 17'
+    if 18 <= valor <= 20:
+        return '18 a 20'
+    return None
+
+    df_media['FAIXA_ETARIA'] = df_media['TP_FAIXA_ETARIA'].apply(agrupar_faixa)
+
+    col1, col2 = st.columns(2)
+    with col1:
+    st.markdown("### 📦 Distribuição das Notas por Sexo")
+
+    fig_sexo = px.box(
+        df_media,
+        x='TP_SEXO',
+        y='MEDIA_GERAL',
+        labels={
+            'TP_SEXO': 'Sexo',
+            'MEDIA_GERAL': 'Nota Média'
+        }
+    )
+
+    st.plotly_chart(fig_sexo, use_container_width=True)
+    with col2:
+    st.markdown("### 📊 Frequência por Faixa Etária")
+
+    df_freq = (
+        df_media['FAIXA_ETARIA']
+        .value_counts()
+        .sort_index()
+        .reset_index()
+    )
+
+    df_freq.columns = ['Faixa Etária', 'Frequência']
+
+    fig_faixa = px.bar(
+        df_freq,
+        x='Frequência',
+        y='Faixa Etária',
+        orientation='h'
+    )
+
+    st.plotly_chart(fig_faixa, use_container_width=True)
+
+
 
