@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import plotly.express as px
 import json
-
+import mathplotlib
 
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
@@ -192,4 +192,7 @@ if botao:
             st.plotly_chart(fig_faixa, use_container_width=True)
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
+
+pip install mathplotlib
+
     
