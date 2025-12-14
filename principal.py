@@ -2,19 +2,20 @@ import streamlit as st
 import pandas as pd
 import os
 import plotly.express as px
+import json
 
 st.set_page_config(
-    page_title='Dashboard das notas do Enem nos últimos anos',
-    page_icon='📊',
-    layout='centered',
-    initial_sidebar_state='expanded'
+    page_title='Dashboard das notas do Enem nos últimos anos',
+    page_icon='📊',
+    layout='centered',
+    initial_sidebar_state='expanded'
 )
 
 FILE_PATHS = {
-    '2020': 'ENEM_2020_FILTRADO_LIMPO.zip',
-    '2021': 'ENEM_2021_FILTRADO_LIMPO.zip',
-    '2022': 'ENEM_2022_FILTRADO_LIMPO.zip',
-    '2023': 'ENEM_2023_FILTRADO_LIMPO.zip'
+    '2020': 'ENEM_2020_FILTRADO_LIMPO.zip',
+    '2021': 'ENEM_2021_FILTRADO_LIMPO.zip',
+    '2022': 'ENEM_2022_FILTRADO_LIMPO.zip',
+    '2023': 'ENEM_2023_FILTRADO_LIMPO.zip'
 }
 
 @st.cache_data
