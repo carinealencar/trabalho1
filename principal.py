@@ -195,12 +195,10 @@ if botao:
 
     
 st.markdown("### Desempenho em instituições de ensino x nota")
-tp_dependencia_adm_esc = {
-    1: 'Federal',
-    2: 'Estadual',
-    3: 'Municipal',
-    4: 'Privada'
-}
+no_municio_esc = {
+    'nome do municio da escola'}
+sg_uf_esc = {
+    'sigla da unidade da federação da escola'}
 
 # Gráfico de instituição de ensino e região
 #colors = {'Yes': 'red', 'No': 'blue'}
@@ -217,24 +215,6 @@ tp_dependencia_adm_esc = {
   #  plt.tight_layout()
     #plt.show()
 
-contagem = (
-    df['Dependência Administrativa']
-    .value_counts()
-    .reset_index()
-)
-
-contagem.columns = ['Dependência', 'Quantidade']
-
-fig = px.bar(
-    contagem,
-    x='Dependência',
-    y='Quantidade',
-    color='Dependência',
-    text='Quantidade',
-    title='Distribuição das escolas por dependência administrativa'
-)
-
-st.plotly_chart(fig, use_container_width=True)
 
 
 
