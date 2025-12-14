@@ -22,7 +22,6 @@ FILE_PATHS = {
 def load_geojson(path):
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
-
 geojson_municipios = load_geojson('municipios_ibge.geojson.json')
 
 @st.cache_data
@@ -188,7 +187,4 @@ if botao:
       )
       
       st.plotly_chart(fig_faixa, use_container_width=True)
-  
-  st.markdown("### 🗺️ Mapa Municipal – Média Geral das Notas por Escola")
-    
     
