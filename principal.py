@@ -191,51 +191,49 @@ if botao:
         
         st.plotly_chart(fig_faixa, use_container_width=True)
 
-    st.markdown("### 🗺️ Mapa Interativo – Média Geral do ENEM por Estado")
-    # A seção 'Média Geral do ENEM por Estado' não está implementada no seu código,
-    # apenas o título é exibido. Para fins deste exercício, manterei o código existente.
-
     #Gráfico de mapa
-    st.markdown("### 🗺️ Mapa Municipal – Total de Participantes")
+    st.markdown("### 🗺️ Média geral das notas nos municípios")
     
+    COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC' 
+
     df_mapa = df[
         (df['TP_PRESENCA_CH'] == 1) &
         (df['TP_PRESENCA_CN'] == 1) &
         (df['TP_PRESENCA_MT'] == 1) &
         (df['TP_PRESENCA_LC'] == 1) &
-        (df['CO_MUNICIPIO_ESC'].notna())
+        (df[COLUNA_MUNICIPIO].notna())
     ].copy()
+    df_mapa['MEDIA_GERAL'] = df_mapa[
+        ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+    ].mean(axis=1)
     
-    # ⚠️ Alerta: É importante garantir que a coluna 'CO_MUNICIPIO_ESC' 
-    # contenha apenas números inteiros que correspondam aos IDs no GeoJSON.
-    df_mapa['CO_MUNICIPIO_ESC'] = df_mapa['CO_MUNICIPIO_ESC'].astype(str).str.replace(r'\.0$', '', regex=True).astype(int)
-
-    df_municipio = (
+    df_municipio_media = (
         df_mapa
-        .groupby('CO_MUNICIPIO_ESC')
-        .size()
-        .reset_index(name='TOTAL_PARTICIPANTES')
+        .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL'] 
+        .mean() # Calcula a média
+        .reset_index(name='MEDIA_MUNICIPIO')
+    )
+
+    df_municipio_media[COLUNA_MUNICIPIO] = (
+        df_municipio_media[COLUNA_MUNICIPIO]
+        .astype(str)
+        .str.replace(r'\.0$', '', regex=True) # Limpeza adicional se a coluna tiver formato float
     )
     
-    # É bom garantir que o ID da feature no GeoJSON seja do mesmo tipo de dado 
-    # (string ou int) que a coluna de localização do DataFrame.
-    # Como o GeoJSON usa strings para IDs, vou converter a coluna do DataFrame para string,
-    # garantindo que o mapeamento ocorra corretamente.
-    df_municipio['CO_MUNICIPIO_ESC'] = df_municipio['CO_MUNICIPIO_ESC'].astype(str)
-    
+    # 5. Criação do Mapa Coroplético
     fig_mapa_mun = px.choropleth_mapbox(
-        df_municipio,
+        df_municipio_media,
         geojson=geojson_municipios,
-        locations='CO_MUNICIPIO_ESC',
-        featureidkey='properties.id',  # O ID da propriedade deve ser uma string, o que é comum em GeoJSON
-        color='TOTAL_PARTICIPANTES',
+        locations=COLUNA_MUNICIPIO,
+        featureidkey='properties.id',
+        color='MEDIA_MUNICIPIO', # A cor agora representa a MÉDIA
         color_continuous_scale='Turbo',
         mapbox_style='carto-positron',
-        zoom=3, # Zoom ajustado para melhor visualização inicial do Brasil
+        zoom=3,
         center={'lat': -14, 'lon': -52},
         opacity=0.75,
         height=650,
-        labels={'TOTAL_PARTICIPANTES': 'Total de Participantes'}
+        labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
     )
     
     fig_mapa_mun.update_layout(
