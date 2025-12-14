@@ -66,18 +66,25 @@ if botao:
             'Matemática': 'TP_PRESENCA_MT',
             'Linguagens': 'TP_PRESENCA_LC'
         }
+        
+        placar_data = {
+            'Prova': [],
+            'Presentes': [],
+            'Ausentes': [],
+            'Eliminados': []
+        }
+    
         for prova, coluna in provas.items():
-            contagem = df[coluna].value_counts().sort_index()
-            
-            ausentes = contagem.get(0, 0)
-            presentes = contagem.get(1, 0)
-            eliminados = contagem.get(2, 0)
+                contagem = df[coluna].value_counts().sort_index()
+        
+                placar_data['Prova'].append(prova)
+                placar_data['Presentes'].append(contagem.get(1, 0))
+                placar_data['Ausentes'].append(contagem.get(0, 0))
+                placar_data['Eliminados'].append(contagem.get(2, 0))
+        
+        placar_df = pd.DataFrame(placar_data)    
+        st.dataframe(placar_df, use_container_width=True)
 
-            st.markdown(f"**{prova}**")
-            st.metric("Presentes", presentes)
-            st.metric("Ausentes", ausentes)
-            st.metric("Eliminados", eliminados)
-            st.divider()
         with col2:
             st.markdown("### 📊 Média das Notas por Prova (somente presentes)")
         
