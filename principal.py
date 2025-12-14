@@ -59,9 +59,9 @@ m_renda = {
 }
 
 m_conclusao = {
-    'Entre 2007 e 2012': [8, 9, 10, 11, 12, 13, 14],
-    'Entre 2013 e 2018': [2, 3, 4, 5, 6, 7],
-    'Nos últimos anos': [1]
+    'Entre 2007 e 2012': [12, 13, 14, 15],
+    'Entre 2013 e 2018': [6, 7, 8, 9, 10, 11],
+    'Nos últimos anos': [1, 2, 3, 4, 5]
 }
 
 m_raca = {
