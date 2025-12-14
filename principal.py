@@ -4,15 +4,6 @@ import os
 import plotly.express as px
 import json
 
-# --- Otimização: Cache para o arquivo GeoJSON ---
-@st.cache_data
-def load_geojson(path):
-    with open(path, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-geojson_municipios = load_geojson('municipios_ibge.geojson.json')
-# ---------------------------------------------------
-
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
     page_icon="📊",
@@ -26,6 +17,12 @@ FILE_PATHS = {
     '2022': 'ENEM_2022_FILTRADO_LIMPO.zip',
     '2023': 'ENEM_2023_FILTRADO_LIMPO.zip'
 }
+
+@st.cache_data
+def load_geojson(path):
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+geojson_municipios = load_geojson('municipios_ibge.geojson.json')
 
 @st.cache_data
 def load_data(path):
@@ -53,7 +50,7 @@ if filtro == 'Renda':
 if filtro == 'Raça':
     raca = st.selectbox(
         'Escolha a raça a analisar:',
-        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não declarado']) # CORRIGIDO: 'Não informado' para 'Não declarado'
+        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não declarado']) 
 
 m_renda = {
     'Nenhuma renda': ['A'],
@@ -69,7 +66,7 @@ m_raca = {
     'Pardo': 3,
     'Amarelo': 4,
     'Indígena': 5,
-    'Não declarado': 0 # CORRIGIDO: Chave de mapeamento de raça
+    'Não declarado': 0 
 }
 
 m_faixa_etaria = {
@@ -102,11 +99,6 @@ if botao:
     df = load_data(caminho_arquivo)
     st.subheader(f"Resultados e Análise do ENEM {ano}")
     
-    # 🐛 Correção Lógica e Filtro
-    # No seu código original: `if filtro == 'Raça': ... raca = st.selectbox(...)`
-    # O `selectbox` tinha a opção 'Não informado', mas o dicionário `m_raca`
-    # tinha a chave 'Não declarado'. Corrigi a opção do selectbox acima para 
-    # 'Não declarado' para corresponder à chave do dicionário.
     if filtro == 'Renda':
         df = df[df['Q006'].isin(m_renda[salario])]
     if filtro == 'Raça':
@@ -195,58 +187,44 @@ if botao:
     
     COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC' 
     
-    # 1. Filtro para Participantes Presentes e com Código de Município
     df_mapa = df[
-    (df['TP_PRESENCA_CH'] == 1) &
-    (df['TP_PRESENCA_CN'] == 1) &
-    (df['TP_PRESENCA_MT'] == 1) &
-    (df['TP_PRESENCA_LC'] == 1) &
-    (df[COLUNA_MUNICIPIO].notna())
+        (df['TP_PRESENCA_CH'] == 1) &
+        (df['TP_PRESENCA_CN'] == 1) &
+        (df['TP_PRESENCA_MT'] == 1) &
+        (df['TP_PRESENCA_LC'] == 1) &
+        (df[COLUNA_MUNICIPIO].notna())
     ].copy()
+   
+    df_mapa['MEDIA_GERAL'] = df_mapa[
+        ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+    ].mean(axis=1)
+
+    df_mapa[COLUNA_MUNICIPIO] = df_mapa[COLUNA_MUNICIPIO].astype(str)
     
-    # 🚨 PONTO CRÍTICO: Verifique se o DataFrame Filtrado não está vazio 🚨
-    if len(df_mapa) == 0:
-        st.warning("Nenhum participante encontrado que atenda a TODOS os filtros (Renda/Raça E presença nas 4 provas). O mapa não pode ser gerado.")
-        # Se for vazio, paramos a execução do mapa aqui e o app continua.
-    else:
-        # 2. Cálculo da Média Geral (Só se houver dados)
-        df_mapa['MEDIA_GERAL'] = df_mapa[
-            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-        ].mean(axis=1)
-        
-        # 3. Tratamento dos Dados da Coluna de Município (CRUCIAL)
-        df_mapa[COLUNA_MUNICIPIO] = (
-            df_mapa[COLUNA_MUNICIPIO]
-            .astype(int, errors='ignore')
-            .astype(str)
-        )
-        
-        # 4. Agrupamento e Cálculo da Média por Município
-        df_municipio_media = (
-            df_mapa
-            .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
-            .mean() 
-            .reset_index(name='MEDIA_MUNICIPIO')
-        )
-        
-        # 5. Criação do Mapa Coroplético
-        fig_mapa_mun = px.choropleth_mapbox(
-            df_municipio_media,
-            geojson=geojson_municipios,
-            locations=COLUNA_MUNICIPIO,
-            featureidkey='properties.id',
-            color='MEDIA_MUNICIPIO',
-            color_continuous_scale='Turbo',
-            mapbox_style='carto-positron',
-            zoom=3,
-            center={'lat': -14, 'lon': -52},
-            opacity=0.75,
-            height=650,
-            labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
-        )
-        
-        fig_mapa_mun.update_layout(
-            margin={"r":0,"t":0,"l":0,"b":0}
-        )
-        
-        st.plotly_chart(fig_mapa_mun, use_container_width=True)
+    df_municipio_media = (
+        df_mapa
+        .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
+        .mean() 
+        .reset_index(name='MEDIA_MUNICIPIO')
+    )
+    
+    fig_mapa_mun = px.choropleth_mapbox(
+        df_municipio_media,
+        geojson=geojson_municipios,
+        locations=COLUNA_MUNICIPIO,
+        featureidkey='properties.id',
+        color='MEDIA_MUNICIPIO',
+        color_continuous_scale='Turbo',
+        mapbox_style='carto-positron',
+        zoom=3,
+        center={'lat': -14, 'lon': -52},
+        opacity=0.75,
+        height=650,
+        labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
+    )
+    
+    fig_mapa_mun.update_layout(
+        margin={"r":0,"t":0,"l":0,"b":0}
+    )
+    
+    st.plotly_chart(fig_mapa_mun, use_container_width=True)
