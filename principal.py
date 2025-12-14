@@ -80,7 +80,7 @@ if botao:
     df = load_data(caminho_arquivo)
     st.subheader(f"Resultados e Análise do ENEM {ano}")
     if filtro == 'Renda':
-    df = df[df['Q006'].isin(m_renda[salario])]
+        df = df[df['Q006'].isin(m_renda[salario])]
 
     if filtro == 'Ano de conclusão':
         df = df[df['TP_ANO_CONCLUIU'].isin(m_conclusao[ano_c])]
