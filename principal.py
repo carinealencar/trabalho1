@@ -20,53 +20,53 @@ FILE_PATHS = {
 
 @st.cache_data
 def load_geojson(path):
-    with open(path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 geojson_municipios = load_geojson('municipios_ibge.geojson.json')
 
 @st.cache_data
 def load_data(path):
-    return pd.read_csv(
-        path,
-        sep=';',
-        encoding='latin1',
-        compression='zip',
-        low_memory=False
-    )
+    return pd.read_csv(
+        path,
+        sep=';',
+        encoding='latin1',
+        compression='zip',
+        low_memory=False
+    )
 
 st.title('Dashboard das notas do Enem nos últimos anos 📊')
 st.header('Filtros:')
 
 ano = st.selectbox('Escolha o ano para a análise:', 
-                   ('2020', '2021', '2022', '2023'))
+                    ('2020', '2021', '2022', '2023'))
 filtro = st.selectbox('Escolha uma variável para análise:', 
-                      sorted(['Renda', 'Raça']))
+                        sorted(['Renda', 'Raça']))
 
 if filtro == 'Renda':
-    salario = st.selectbox(
-        'Escolha a faixa salarial:',
-        ['Nenhuma renda', 'Até 1 salário mínimo', 'Entre 1 e 3 salários mínimos', 'Entre 3 e 6 salários mínimos', 'Acima de 6 salários mínimos'])
+    salario = st.selectbox(
+        'Escolha a faixa salarial:',
+        ['Nenhuma renda', 'Até 1 salário mínimo', 'Entre 1 e 3 salários mínimos', 'Entre 3 e 6 salários mínimos', 'Acima de 6 salários mínimos'])
 
 if filtro == 'Raça':
-    raca = st.selectbox(
-        'Escolha a raça a analisar:',
-        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não declarado']) 
+    raca = st.selectbox(
+        'Escolha a raça a analisar:',
+        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não declarado']) 
 
 m_renda = {
-    'Nenhuma renda': ['A'],
-    'Até 1 salário mínimo': ['B'],
-    'Entre 1 e 3 salários mínimos': ['C', 'D'],
-    'Entre 3 e 6 salários mínimos': ['E', 'F', 'G'],
-    'Acima de 6 salários mínimos': ['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
+    'Nenhuma renda': ['A'],
+    'Até 1 salário mínimo': ['B'],
+    'Entre 1 e 3 salários mínimos': ['C', 'D'],
+    'Entre 3 e 6 salários mínimos': ['E', 'F', 'G'],
+    'Acima de 6 salários mínimos': ['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 }
 
 m_raca = {
-    'Branco': 1,
-    'Preto': 2,
-    'Pardo': 3,
-    'Amarelo': 4,
-    'Indígena': 5,
-    'Não declarado': 0 # CORRIGIDO: Chave de mapeamento de raça
+    'Branco': 1,
+    'Preto': 2,
+    'Pardo': 3,
+    'Amarelo': 4,
+    'Indígena': 5,
+    'Não declarado': 0 # CORRIGIDO: Chave de mapeamento de raça
 }
 
 m_faixa_etaria = {
