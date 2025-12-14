@@ -177,12 +177,27 @@ if botao:
     st.markdown("### 🗺️ Mapa Interativo – Média Geral do ENEM por Estado")
 
     #Gráfico de mapa
-    df_mapa = df[(df['TP_PRESENCA_CH'] == 1) & (df['TP_PRESENCA_CN'] == 1) & (df['TP_PRESENCA_MT'] == 1) & (df['TP_PRESENCA_LC'] == 1) & (df['SG_UF_PROVA'].notna())
-    ].copy()
-    df_mapa['MEDIA_GERAL'] = df_mapa[['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']].mean(axis=1)
+    st.markdown("### 🗺️ Mapa Interativo – Média Geral do ENEM por Estado")
     
-    df_mapa_estado = (df_mapa.groupby('SG_UF_PROVA')['MEDIA_GERAL'].mean().reset_index())
-
+    df_mapa = df[
+        (df['TP_PRESENCA_CH'] == 1) &
+        (df['TP_PRESENCA_CN'] == 1) &
+        (df['TP_PRESENCA_MT'] == 1) &
+        (df['TP_PRESENCA_LC'] == 1) &
+        (df['SG_UF_PROVA'].notna())
+    ].copy()
+    
+    df_mapa['MEDIA_GERAL'] = df_mapa[
+        ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+    ].mean(axis=1)
+    
+    df_mapa_estado = (
+        df_mapa
+        .groupby('SG_UF_PROVA')['MEDIA_GERAL']
+        .mean()
+        .reset_index()
+    )
+    
     coords_uf = {
         'AC': (-9.97499, -67.8243),
         'AL': (-9.5713, -36.782),
@@ -212,7 +227,13 @@ if botao:
         'SE': (-10.9472, -37.0731),
         'TO': (-10.184, -48.3336)
     }
-    df_coords = (pd.DataFrame.from_dict(coords_uf, orient='index', columns=['lat', 'lon']).reset_index().rename(columns={'index': 'SG_UF_PROVA'})    )
+    
+    df_coords = (
+        pd.DataFrame.from_dict(coords_uf, orient='index', columns=['lat', 'lon'])
+        .reset_index()
+        .rename(columns={'index': 'SG_UF_PROVA'})
+    )
+    
     df_mapa_estado = df_mapa_estado.merge(df_coords, on='SG_UF_PROVA')
     
     fig_mapa = px.scatter_mapbox(
@@ -227,10 +248,11 @@ if botao:
         height=600,
         color_continuous_scale='Viridis'
     )
+    
     fig_mapa.update_layout(
         mapbox_style="carto-positron",
         margin={"r": 0, "t": 0, "l": 0, "b": 0}
     )
     
     st.plotly_chart(fig_mapa, use_container_width=True)
-    
+        
