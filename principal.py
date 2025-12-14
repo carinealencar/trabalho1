@@ -192,8 +192,8 @@ if botao:
         st.plotly_chart(fig_faixa, use_container_width=True)
 
     #Gráfico de mapa
-    st.markdown("### 🗺️ Média geral das notas nos municípios")
-    
+# 1. Definindo a Coluna de Município e Filtragem
+    # Revertendo para CO_MUNICIPIO_ESC, conforme a imagem de dados.
     COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC' 
 
     df_mapa = df[
@@ -203,30 +203,35 @@ if botao:
         (df['TP_PRESENCA_LC'] == 1) &
         (df[COLUNA_MUNICIPIO].notna())
     ].copy()
+
+    # 2. Cálculo da Média Geral
     df_mapa['MEDIA_GERAL'] = df_mapa[
         ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
     ].mean(axis=1)
+
+    # 3. Tratamento dos Dados da Coluna de Município (CRUCIAL)
+    # 🚨 Conversão de float (2303709.0) para string ('2303709') para mapeamento no GeoJSON
+    df_mapa[COLUNA_MUNICIPIO] = (
+        df_mapa[COLUNA_MUNICIPIO]
+        .astype(int, errors='ignore') # Converte para inteiro (remove .0)
+        .astype(str)                  # Converte para string
+    )
     
+    # 4. Agrupamento e Cálculo da Média por Município
     df_municipio_media = (
         df_mapa
-        .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL'] 
-        .mean() # Calcula a média
+        .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
+        .mean() 
         .reset_index(name='MEDIA_MUNICIPIO')
     )
 
-    df_municipio_media[COLUNA_MUNICIPIO] = (
-        df_municipio_media[COLUNA_MUNICIPIO]
-        .astype(str)
-        .str.replace(r'\.0$', '', regex=True) # Limpeza adicional se a coluna tiver formato float
-    )
-    
     # 5. Criação do Mapa Coroplético
     fig_mapa_mun = px.choropleth_mapbox(
         df_municipio_media,
         geojson=geojson_municipios,
         locations=COLUNA_MUNICIPIO,
         featureidkey='properties.id',
-        color='MEDIA_MUNICIPIO', # A cor agora representa a MÉDIA
+        color='MEDIA_MUNICIPIO',
         color_continuous_scale='Turbo',
         mapbox_style='carto-positron',
         zoom=3,
