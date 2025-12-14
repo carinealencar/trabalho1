@@ -197,6 +197,50 @@ if botao:
 st.markdown("### Desempenho em instituições de ensino x nota")
 
 import numpy as np 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+tp_dependencia_adm_esc = {
+    1: 'Federal',
+    2: 'Estadual',
+    3: 'Municipal',
+    4: 'Privada'
+}
+
+
+# Gráfico de instituição de ensino e região
+#colors = {'Yes': 'red', 'No': 'blue'}
+
+#for i, predictor in enumerate(df.drop(columns=['Churn', 'TotalCharges', 'MonthlyCharges', 'tenure'])):
+ #   plt.figure(i, figsize=(6, 4))
+   # ax = sns.countplot(data=df, x=predictor, hue='Churn', palette=colors)
+  #  plt.title(predictor)
+    
+    # Add values on top of each bar
+    #for container in ax.containers:
+       # ax.bar_label(container)
+    
+  #  plt.tight_layout()
+    #plt.show()
+
+contagem = (
+    df['Dependência Administrativa']
+    .value_counts()
+    .reset_index()
+)
+
+contagem.columns = ['Dependência', 'Quantidade']
+
+fig = px.bar(
+    contagem,
+    x='Dependência',
+    y='Quantidade',
+    color='Dependência',
+    text='Quantidade',
+    title='Distribuição das escolas por dependência administrativa'
+)
+
+st.plotly_chart(fig, use_container_width=True)
 
 
 
