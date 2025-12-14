@@ -48,14 +48,32 @@ if filtro == 'Raça':
 botao = st.button('Exibir gráficos')
 
 if botao:
-    st.subheader(f"Processando Dados do ENEM {ano}")
     caminho_arquivo = FILE_PATHS[ano]
+    df = load_data(caminho_arquivo)
+
+    # Calculando a média geral
+    df['MEDIA_GERAL'] = df[
+        ['NU_NOTA_MT', 'NU_NOTA_LC', 'NU_NOTA_CH', 'NU_NOTA_CN']
+    ].mean(axis=1)
 
     st.subheader(f"Resultados e Análise do ENEM {ano}")
-    st.write(f"Total de participantes para a análise: **{len(caminho_arquivo)}**")
+    st.write(f"Total de participantes para a análise: **{len(df)}**")
 
     col1, col2 = st.columns([1, 2])
+
+    # MÉTRICA
     with col1:
-        
+        st.metric(
+            label="Média Geral das Notas",
+            value=f"{df['MEDIA_GERAL'].mean():.2f}"
+        )
+
+    # GRÁFICO
     with col2:
-        
+        fig = px.histogram(
+            df,
+            x='MEDIA_GERAL',
+            nbins=30,
+            title='Distribuição da Média Geral das Notas'
+        )
+        st.plotly_chart(fig, use_container_width=True)
