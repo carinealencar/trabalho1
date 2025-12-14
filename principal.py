@@ -45,6 +45,8 @@ ano = st.selectbox('Escolha o ano para a análise:',
                    ('2020', '2021', '2022', '2023'))
 filtro = st.selectbox('Escolha uma variável para análise:', 
                       sorted(['Renda', 'Raça']))
+regiao = st.selectbox('Escolha uma variável para análise:',
+                      sorted(['no_municio_esc', 'sg_uf_esc']))
 
 if filtro == 'Renda':
     salario = st.selectbox(
@@ -193,16 +195,16 @@ if botao:
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
             
-#no_municio_esc = {'nome do municipio da escola'}
- #sg_uf_esc = {'sigla da unidade da federação da escola'}
-#gráfico de instituição de tipo de instituição de ensino pela nota     
+#no_municio_esc = nome do municipio da escola
+ #sg_uf_esc = sigla da unidade da federação da escola
+    #gráfico de instituição de tipo de instituição de ensino pela nota     
 st.markdown("###📮 Desempenho em instituições de ensino pela nota")
 
-#ufs = sorted(df['SG_UF_ESC'].dropna().unique())
+ufs = sorted(df['SG_UF_ESC'].dropna().unique())
 
-#uf_selecionada = st.selectbox(
- #   'Selecione a UF da escola: ufs'
-#)
+uf_selecionada = st.selectbox(
+    'Selecione a UF da escola: ufs'
+)
 
 df_uf = df[df['SG_UF_ESC'] == uf_selecionada]
 
