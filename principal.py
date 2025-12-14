@@ -200,15 +200,13 @@ if botao:
         (df['TP_PRESENCA_CH'] == 1) &
         (df['TP_PRESENCA_CN'] == 1) &
         (df['TP_PRESENCA_MT'] == 1) &
-        (df['TP_PRESENCA_LC'] == 1) &
-        (df[COLUNA_MUNICIPIO].notna())
+        (df['TP_PRESENCA_LC'] == 1)
     ].copy()
     
     df_mapa['MEDIA_GERAL'] = df_mapa[
             ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
     ].mean(axis=1)
     
-    # 3. Tratamento dos Dados da Coluna de Município (CRUCIAL para o GeoJSON)
     df_mapa[COLUNA_MUNICIPIO] = (
         df_mapa[COLUNA_MUNICIPIO]
         .astype(int, errors='ignore') 
@@ -222,7 +220,6 @@ if botao:
         .reset_index(name='MEDIA_MUNICIPIO')
     )
     
-    # 5. Criação do Mapa Coroplético
     fig_mapa_mun = px.choropleth_mapbox(
         df_municipio_media,
         geojson=geojson_municipios,
