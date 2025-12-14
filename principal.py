@@ -147,7 +147,7 @@ if botao:
     ].mean(axis=1)
     
     df_media = df_media.dropna(subset=['MEDIA_GERAL'])
-
+    
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("### 📦 Distribuição das Notas por Sexo")
@@ -191,85 +191,4 @@ if botao:
             st.plotly_chart(fig_faixa, use_container_width=True)
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
-    # Pré-processamento dos dados para o mapa
-    df_mapa = df[
-        (df['TP_PRESENCA_CH'] == 1) &
-        (df['TP_PRESENCA_CN'] == 1) &
-        (df['TP_PRESENCA_MT'] == 1) &
-        (df['TP_PRESENCA_LC'] == 1) &
-        (df['CO_MUNICIPIO_ESC'].notna())  # Remover valores NaN
-    ].copy()
     
-    if not df_mapa.empty:
-        # Calcular média geral
-        df_mapa['MEDIA_GERAL'] = df_mapa[
-            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-        ].mean(axis=1)
-        
-        # Converter código do município para string e garantir formato correto
-        df_mapa['CO_MUNICIPIO_ESC'] = df_mapa['CO_MUNICIPIO_ESC'].astype(str).str.strip()
-        
-        # Remover traços ou pontos se houver
-        df_mapa['CO_MUNICIPIO_ESC'] = df_mapa['CO_MUNICIPIO_ESC'].str.replace('.', '', regex=False)
-        
-        # Agrupar por município
-        df_municipio_media = (
-            df_mapa.groupby('CO_MUNICIPIO_ESC')['MEDIA_GERAL']
-            .mean()
-            .reset_index(name='MEDIA_MUNICIPIO')
-        )
-        
-        # Verificar estrutura do GeoJSON
-        st.write(f"Número de municípios com dados: {len(df_municipio_media)}")
-        
-        # Verificar primeiros códigos para debug
-        st.write("Exemplo de códigos municipais nos dados:")
-        st.write(df_municipio_media['CO_MUNICIPIO_ESC'].head())
-        
-        # Criar o mapa
-        try:
-            # Tentar diferentes chaves possíveis no GeoJSON
-            featureidkey = None
-            if 'properties' in geojson_municipios['features'][0]:
-                props = geojson_municipios['features'][0]['properties']
-                possible_keys = ['id', 'CD_MUN', 'codigo_ibge', 'code', 'codigo', 'COD_MUN']
-                
-                for key in possible_keys:
-                    if key in props:
-                        featureidkey = f'properties.{key}'
-                        st.write(f"Usando chave: {featureidkey}")
-                        break
-            
-            if featureidkey:
-                fig_mapa_mun = px.choropleth_mapbox(
-                    df_municipio_media,
-                    geojson=geojson_municipios,
-                    locations='CO_MUNICIPIO_ESC',
-                    featureidkey=featureidkey,
-                    color='MEDIA_MUNICIPIO',
-                    color_continuous_scale='Turbo',
-                    mapbox_style='carto-positron',
-                    zoom=3,
-                    center={'lat': -14, 'lon': -52},
-                    opacity=0.75,
-                    height=650,
-                    labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'},
-                    hover_data=['CO_MUNICIPIO_ESC', 'MEDIA_MUNICIPIO']
-                )
-                
-                fig_mapa_mun.update_layout(
-                    margin={"r": 0, "t": 0, "l": 0, "b": 0}
-                )
-                
-                st.plotly_chart(fig_mapa_mun, use_container_width=True)
-            else:
-                st.error("Não foi possível identificar a chave correta no GeoJSON.")
-                st.write("Chaves disponíveis nas propriedades:", list(props.keys()))
-        except Exception as e:
-            st.error(f"Erro ao criar o mapa: {str(e)}")
-            
-            # Mostrar estrutura do GeoJSON para debug
-            with st.expander("Ver estrutura do GeoJSON"):
-                st.json(geojson_municipios['features'][0])
-    else:
-        st.warning("Dados insuficientes para criar o mapa. Verifique se há participantes com código municipal válido.")
