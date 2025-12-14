@@ -2,9 +2,13 @@ import streamlit as st
 import pandas as pd
 import os
 import plotly.express as px
-import json
 
-
+st.set_page_config(
+    page_title='Dashboard das notas do Enem nos últimos anos',
+    page_icon='📊',
+    layout='centered',
+    initial_sidebar_state='expanded'
+)
 
 FILE_PATHS = {
     '2020': 'ENEM_2020_FILTRADO_LIMPO.zip',
