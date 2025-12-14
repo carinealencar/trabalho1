@@ -4,15 +4,6 @@ import os
 import plotly.express as px
 import json
 
-# --- Otimização: Cache para o arquivo GeoJSON ---
-@st.cache_data
-def load_geojson(path):
-    with open(path, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-geojson_municipios = load_geojson('municipios_ibge.geojson.json')
-# ---------------------------------------------------
-
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
     page_icon="📊",
@@ -26,6 +17,13 @@ FILE_PATHS = {
     '2022': 'ENEM_2022_FILTRADO_LIMPO.zip',
     '2023': 'ENEM_2023_FILTRADO_LIMPO.zip'
 }
+
+@st.cache_data
+def load_geojson(path):
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+geojson_municipios = load_geojson('municipios_ibge.geojson.json')
 
 @st.cache_data
 def load_data(path):
