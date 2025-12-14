@@ -184,7 +184,7 @@ if botao:
         (df['TP_PRESENCA_CN'] == 1) &
         (df['TP_PRESENCA_MT'] == 1) &
         (df['TP_PRESENCA_LC'] == 1) &
-        (df['SG_UF_PROVA'].notna())
+        (df['SG_UF_ESC'].notna())
     ].copy()
     
     df_mapa['MEDIA_GERAL'] = df_mapa[
@@ -193,7 +193,7 @@ if botao:
     
     df_mapa_estado = (
         df_mapa
-        .groupby('SG_UF_PROVA')['MEDIA_GERAL']
+        .groupby('SG_UF_ESC')['MEDIA_GERAL']
         .mean()
         .reset_index()
     )
@@ -231,10 +231,10 @@ if botao:
     df_coords = (
         pd.DataFrame.from_dict(coords_uf, orient='index', columns=['lat', 'lon'])
         .reset_index()
-        .rename(columns={'index': 'SG_UF_PROVA'})
+        .rename(columns={'index': 'SG_UF_ESC'})
     )
     
-    df_mapa_estado = df_mapa_estado.merge(df_coords, on='SG_UF_PROVA')
+    df_mapa_estado = df_mapa_estado.merge(df_coords, on='SG_UF_ESC')
     
     fig_mapa = px.scatter_mapbox(
         df_mapa_estado,
@@ -242,7 +242,7 @@ if botao:
         lon='lon',
         size='MEDIA_GERAL',
         color='MEDIA_GERAL',
-        hover_name='SG_UF_PROVA',
+        hover_name='SG_UF_ESC',
         hover_data={'MEDIA_GERAL': ':.2f'},
         zoom=3,
         height=600,
