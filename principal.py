@@ -114,56 +114,31 @@ if botao:
     
     df_media = df_media.dropna(subset=['MEDIA_GERAL'])
 
-    def agrupar_faixa(valor):
-    if valor in [1, 2, 3]:
-        return '1 a 3'
-    if 4 <= valor <= 10:
-        return '4 a 10'
-    if 11 <= valor <= 13:
-        return '11 a 13'
-    if 14 <= valor <= 17:
-        return '14 a 17'
-    if 18 <= valor <= 20:
-        return '18 a 20'
-    return None
-
-    df_media['FAIXA_ETARIA'] = df_media['TP_FAIXA_ETARIA'].apply(agrupar_faixa)
-
     col1, col2 = st.columns(2)
     with col1:
-    st.markdown("### 📦 Distribuição das Notas por Sexo")
-
-    fig_sexo = px.box(
-        df_media,
-        x='TP_SEXO',
-        y='MEDIA_GERAL',
-        labels={
-            'TP_SEXO': 'Sexo',
-            'MEDIA_GERAL': 'Nota Média'
-        }
-    )
-
-    st.plotly_chart(fig_sexo, use_container_width=True)
+        st.markdown("### 📦 Distribuição das Notas por Sexo")
+    
+        fig_sexo = px.box(
+            df_media,
+            x='TP_SEXO',
+            y='MEDIA_GERAL',
+            labels={
+                'TP_SEXO': 'Sexo',
+                'MEDIA_GERAL': 'Nota Média'
+            }
+        )
+    
+        st.plotly_chart(fig_sexo, use_container_width=True)
     with col2:
-    st.markdown("### 📊 Frequência por Faixa Etária")
-
-    df_freq = (
-        df_media['FAIXA_ETARIA']
-        .value_counts()
-        .sort_index()
-        .reset_index()
-    )
-
-    df_freq.columns = ['Faixa Etária', 'Frequência']
-
-    fig_faixa = px.bar(
-        df_freq,
-        x='Frequência',
-        y='Faixa Etária',
-        orientation='h'
-    )
-
-    st.plotly_chart(fig_faixa, use_container_width=True)
-
-
-
+        st.markdown("### 📊 Frequência por Faixa Etária")
+        df_freq = (df_media['TP_FAIXA_ETARIA'].value_counts().sort_index().reset_index())
+        df_freq.columns = ['Faixa Etária (código)', 'Frequência']
+        
+        fig_faixa = px.bar(
+            df_freq,
+            x='Frequência',
+            y='Faixa Etária (código)',
+            orientation='h'
+        )
+        
+        st.plotly_chart(fig_faixa, use_container_width=True)
