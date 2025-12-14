@@ -197,10 +197,6 @@ if botao:
 st.markdown("### Desempenho em instituições de ensino x nota")
 
 desempenho = {
-    'No município': df['no_municipio_esc'].mean(),
-    'No estado': df['sg_uf_esc'].mean()
-}
-desempenho = {
     'No município': no_municipio_esc,
     'No estado': sg_uf_esc
 }
