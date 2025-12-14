@@ -196,8 +196,9 @@ if botao:
 
     st.markdown("### 📮 Instituição de ensino por nota")
     
-px.line(sexo, y=["Feminino","Masculino"])
+color_discrete_sequence = ["blue"]
 
+df_municipios =  st.dataframe(sg_uf_esc, no_municipio_esc=True)
 
 
 
