@@ -195,7 +195,8 @@ if botao:
 
 
     st.markdown("### 📮 Instituição de ensino por nota")
-
+    
+px.line(sexo, y=["Feminino","Masculino"])
 
 
 
