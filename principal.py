@@ -191,11 +191,13 @@ if botao:
         
         st.plotly_chart(fig_faixa, use_container_width=True)
 
-    #Gráfico de mapa
-# 1. Definindo a Coluna de Município e Filtragem
-    # Revertendo para CO_MUNICIPIO_ESC, conforme a imagem de dados.
+    # ... (Seu código até a Média Geral das Notas por Faixa Etária) ...
+    
+    st.markdown("### 🗺️ Mapa Municipal – Média Geral das Notas por Escola")
+
     COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC' 
 
+    # 1. Filtro para Participantes Presentes e com Código de Município
     df_mapa = df[
         (df['TP_PRESENCA_CH'] == 1) &
         (df['TP_PRESENCA_CN'] == 1) &
@@ -204,45 +206,49 @@ if botao:
         (df[COLUNA_MUNICIPIO].notna())
     ].copy()
 
-    # 2. Cálculo da Média Geral
-    df_mapa['MEDIA_GERAL'] = df_mapa[
-        ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-    ].mean(axis=1)
+    # 🚨 PONTO CRÍTICO: Verifique se o DataFrame Filtrado não está vazio 🚨
+    if len(df_mapa) == 0:
+        st.warning("Nenhum participante encontrado que atenda a TODOS os filtros (Renda/Raça E presença nas 4 provas). O mapa não pode ser gerado.")
+        # Se for vazio, paramos a execução do mapa aqui e o app continua.
+    else:
+        # 2. Cálculo da Média Geral (Só se houver dados)
+        df_mapa['MEDIA_GERAL'] = df_mapa[
+            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+        ].mean(axis=1)
 
-    # 3. Tratamento dos Dados da Coluna de Município (CRUCIAL)
-    # 🚨 Conversão de float (2303709.0) para string ('2303709') para mapeamento no GeoJSON
-    df_mapa[COLUNA_MUNICIPIO] = (
-        df_mapa[COLUNA_MUNICIPIO]
-        .astype(int, errors='ignore') # Converte para inteiro (remove .0)
-        .astype(str)                  # Converte para string
-    )
-    
-    # 4. Agrupamento e Cálculo da Média por Município
-    df_municipio_media = (
-        df_mapa
-        .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
-        .mean() 
-        .reset_index(name='MEDIA_MUNICIPIO')
-    )
+        # 3. Tratamento dos Dados da Coluna de Município (CRUCIAL)
+        df_mapa[COLUNA_MUNICIPIO] = (
+            df_mapa[COLUNA_MUNICIPIO]
+            .astype(int, errors='ignore')
+            .astype(str)
+        )
+        
+        # 4. Agrupamento e Cálculo da Média por Município
+        df_municipio_media = (
+            df_mapa
+            .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
+            .mean() 
+            .reset_index(name='MEDIA_MUNICIPIO')
+        )
 
-    # 5. Criação do Mapa Coroplético
-    fig_mapa_mun = px.choropleth_mapbox(
-        df_municipio_media,
-        geojson=geojson_municipios,
-        locations=COLUNA_MUNICIPIO,
-        featureidkey='properties.id',
-        color='MEDIA_MUNICIPIO',
-        color_continuous_scale='Turbo',
-        mapbox_style='carto-positron',
-        zoom=3,
-        center={'lat': -14, 'lon': -52},
-        opacity=0.75,
-        height=650,
-        labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
-    )
-    
-    fig_mapa_mun.update_layout(
-        margin={"r":0,"t":0,"l":0,"b":0}
-    )
-    
-    st.plotly_chart(fig_mapa_mun, use_container_width=True)
+        # 5. Criação do Mapa Coroplético
+        fig_mapa_mun = px.choropleth_mapbox(
+            df_municipio_media,
+            geojson=geojson_municipios,
+            locations=COLUNA_MUNICIPIO,
+            featureidkey='properties.id',
+            color='MEDIA_MUNICIPIO',
+            color_continuous_scale='Turbo',
+            mapbox_style='carto-positron',
+            zoom=3,
+            center={'lat': -14, 'lon': -52},
+            opacity=0.75,
+            height=650,
+            labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
+        )
+        
+        fig_mapa_mun.update_layout(
+            margin={"r":0,"t":0,"l":0,"b":0}
+        )
+        
+        st.plotly_chart(fig_mapa_mun, use_container_width=True)True)
