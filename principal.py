@@ -4,7 +4,7 @@ import os
 import plotly.express as px
 import json
 
-with open('municipios_ibge.geojson', 'r', encoding='utf-8') as f:
+with open('municipios_ibge.geojson.json', 'r', encoding='utf-8') as f:
     geojson_municipios = json.load(f)
 
 
@@ -191,11 +191,7 @@ if botao:
         (df['TP_PRESENCA_LC'] == 1) &
         (df['CO_MUNICIPIO_ESC'].notna())
     ].copy()
-    
-    # garantir tipo correto
     df_mapa['CO_MUNICIPIO_ESC'] = df_mapa['CO_MUNICIPIO_ESC'].astype(int)
-    
-    # contagem absoluta por município
     df_municipio = (
         df_mapa
         .groupby('CO_MUNICIPIO_ESC')
