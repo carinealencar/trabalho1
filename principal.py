@@ -183,31 +183,47 @@ if botao:
         
         st.plotly_chart(fig_faixa, use_container_width=True)
     
-    st.markdown("### 🗺️ Mapa Municipal – Média Geral das Notas por Escola")
-    
-    COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC' 
-    
-    df_mapa = df[
-        (df['TP_PRESENCA_CH'] == 1) &
-        (df['TP_PRESENCA_CN'] == 1) &
-        (df['TP_PRESENCA_MT'] == 1) &
-        (df['TP_PRESENCA_LC'] == 1) &
-        (df[COLUNA_MUNICIPIO].notna())
-    ].copy()
-   
+    st.markdown("### 🗺️ Mapa Municipal – Média Geral das Notas")
+
+COLUNA_MUNICIPIO = 'CO_MUNICIPIO_ESC'
+
+# 1. Filtra apenas participantes presentes em todas as provas
+df_mapa = df[
+    (df['TP_PRESENCA_CH'] == 1) &
+    (df['TP_PRESENCA_CN'] == 1) &
+    (df['TP_PRESENCA_MT'] == 1) &
+    (df['TP_PRESENCA_LC'] == 1) &
+    (df[COLUNA_MUNICIPIO].notna())
+].copy()
+
+# 2. Verificação de segurança
+if df_mapa.empty:
+    st.warning(
+        "Nenhum participante encontrado com presença em todas as provas "
+        "e código de município válido. O mapa não pode ser gerado."
+    )
+else:
+    # 3. Cálculo da média geral por participante
     df_mapa['MEDIA_GERAL'] = df_mapa[
         ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
     ].mean(axis=1)
 
-    df_mapa[COLUNA_MUNICIPIO] = df_mapa[COLUNA_MUNICIPIO].astype(str)
-    
+    # 4. Padronização do código IBGE (CRÍTICO)
+    df_mapa[COLUNA_MUNICIPIO] = (
+        df_mapa[COLUNA_MUNICIPIO]
+        .astype(int)
+        .astype(str)
+        .str.zfill(7)
+    )
+
+    # 5. Média da nota por município
     df_municipio_media = (
         df_mapa
-        .groupby(COLUNA_MUNICIPIO)['MEDIA_GERAL']
-        .mean() 
-        .reset_index(name='MEDIA_MUNICIPIO')
+        .groupby(COLUNA_MUNICIPIO, as_index=False)
+        .agg(MEDIA_MUNICIPIO=('MEDIA_GERAL', 'mean'))
     )
-    
+
+    # 6. Criação do mapa coroplético
     fig_mapa_mun = px.choropleth_mapbox(
         df_municipio_media,
         geojson=geojson_municipios,
@@ -222,9 +238,9 @@ if botao:
         height=650,
         labels={'MEDIA_MUNICIPIO': 'Média Geral ENEM'}
     )
-    
+
     fig_mapa_mun.update_layout(
-        margin={"r":0,"t":0,"l":0,"b":0}
+        margin={"r": 0, "t": 0, "l": 0, "b": 0}
     )
-    
+
     st.plotly_chart(fig_mapa_mun, use_container_width=True)
