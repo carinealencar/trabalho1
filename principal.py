@@ -197,7 +197,7 @@ if botao:
 st.markdown("### Desempenho em instituições de ensino x nota")
 
 import numpy as np 
-from scipy import stats
+
 
 
 
