@@ -197,30 +197,22 @@ if botao:
 #gráfico de instituição de tipo de instituição de ensino pela nota     
 st.markdown("### 📮 Desempenho em instituições de ensino pela nota")
 
-regiao = st.selectbox('Escolha uma variável para análise:',
-                      sorted(df['SG_UF_ESC']))
-
                  
-#ufs = sorted(df['SG_UF_ESC'].dropna().unique())
-
-df_uf = df[df['SG_UF_ESC'] == uf_selecionada]
-
-municipios = sorted(df_uf['NO_MUNICIPIO_ESC'].dropna().unique())
-
-municipio_selecionado = st.selectbox(
-    'Selecione o município da escola:',
-    municipios
+df_mun = (
+    df
+    .groupby('NO_MUNICIPIO_ESC')['NU_NOTA_MT']
+    .mean()
+    .sort_values(ascending=False)
+    .head(10)
+    .reset_index()
 )
 
-df_mun = df_uf[df_uf['NO_MUNICIPIO_ESC'] == municipio_selecionado]
-
-fig = px.histogram(
+px.bar(
     df_mun,
-    x='NU_NOTA_MT',
-    title='Distribuição da nota de Matemática'
+    x='NO_MUNICIPIO_ESC',
+    y='NU_NOTA_MT',
+    title='Top 10 municípios por média de Matemática'
 )
-
-st.plotly_chart(fig, use_container_width=True)
 
 
 
