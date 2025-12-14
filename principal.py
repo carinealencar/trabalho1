@@ -38,17 +38,40 @@ filtro = st.selectbox('Escolha uma variável para análise:',
 if filtro == 'Renda':
     salario = st.selectbox(
         'Escolha a faixa salarial:',
-        ['Até 1 salário mínimo', 'Entre 1 e 3 salários mínimos', 'Entre 3 e 6 salários mínimos', 'Acima de 6 salários mínimos'])
+        ['Nenhuma renda', 'Até 1 salário mínimo', 'Entre 1 e 3 salários mínimos', 'Entre 3 e 6 salários mínimos', 'Acima de 6 salários mínimos'])
 
 if filtro == 'Ano de conclusão':
     ano_c = st.selectbox(
         'Escolha o período do ano de conclusão:',
-        ['Entre 2007 e 2012', 'Entre 2013 e 2018', 'Entre 2019 e 2023'])
+        ['Entre 2007 e 2012', 'Entre 2013 e 2018', 'Nos últimos anos'])
 
 if filtro == 'Raça':
     raca = st.selectbox(
         'Escolha a raça a analisar:',
         ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não informado'])
+
+m_renda = {
+    'Nenhuma renda': ['A'],
+    'Até 1 salário mínimo': ['B'],
+    'Entre 1 e 3 salários mínimos': ['B', 'C', 'D'],
+    'Entre 3 e 6 salários mínimos': ['E', 'F', 'G'],
+    'Acima de 6 salários mínimos': ['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
+}
+
+m_conclusao = {
+    'Entre 2007 e 2012': [8, 9, 10, 11, 12, 13, 14],
+    'Entre 2013 e 2018': [2, 3, 4, 5, 6, 7],
+    'Nos últimos anos': [1]
+}
+
+m_raca = {
+    'Branco': 1,
+    'Preto': 2,
+    'Pardo': 3,
+    'Amarelo': 4,
+    'Indígena': 5,
+    'Não declarado': 0
+}
 
 botao = st.button('Exibir gráficos')
 
@@ -56,6 +79,15 @@ if botao:
     caminho_arquivo = FILE_PATHS[ano]
     df = load_data(caminho_arquivo)
     st.subheader(f"Resultados e Análise do ENEM {ano}")
+    if filtro == 'Renda':
+    df = df[df['Q006'].isin(m_renda[salario])]
+
+    if filtro == 'Ano de conclusão':
+        df = df[df['TP_ANO_CONCLUIU'].isin(m_conclusao[ano_c])]
+    
+    if filtro == 'Raça':
+        df = df[df['TP_COR_RACA'] == m_raca[raca]]
+
 
     #Placar ausentes, presentes, eliminados
     st.markdown("### 📋 Placar de Presença nas Provas")
