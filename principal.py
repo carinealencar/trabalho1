@@ -198,25 +198,24 @@ st.markdown("### Desempenho em instituições de ensino x nota")
 
 # )
 desempenho = {
-    'No município': 520,
-    'No estado': 560
+    'no_municipio_esc',
+    'sg_uf_esc'
 }
 
 df_desempenho = (
     pd.DataFrame.from_dict(
         desempenho,
         orient='index',
-        columns=['Média da Nota']
+        columns=['Notas']
     )
     .reset_index()
-    .rename(columns={'index': 'Tipo de Instituição'})
+    .rename(columns={'index': 'Tipo de Instituição de ensino'})
 )
 
 fig = px.bar(
     df_desempenho,
-    x='Tipo de Instituição',
-    y='Média da Nota',
-    title='Tipo de instituições de ensino versus nota (2020–2023)'
+    x='Tipo de Instituição de ensino',
+    y='Nota''
 )
 
 st.plotly_chart(fig, use_container_width=True)
