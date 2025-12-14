@@ -194,7 +194,7 @@ if botao:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
 
 
-st.markdown("### 📮 Instituição de ensino por nota")
+  st.markdown("### 📮 Instituição de ensino por nota")
 
 
 
