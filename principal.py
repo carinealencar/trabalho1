@@ -192,28 +192,40 @@ if botao:
             st.plotly_chart(fig_faixa, use_container_width=True)
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
+            
+#no_municio_esc = {'nome do municipio da escola'}
+ #sg_uf_esc = {'sigla da unidade da federação da escola'}
+#gráfico de instituição de tipo de instituição de ensino pela nota     
+st.markdown("###📮 Desempenho em instituições de ensino pela nota")
 
-    
-st.markdown("### Desempenho em instituições de ensino x nota")
-no_municio_esc = {
-    'nome do municio da escola'}
-sg_uf_esc = {
-    'sigla da unidade da federação da escola'}
+ufs = sorted(df['SG_UF_ESC'].dropna().unique())
 
-# Gráfico de instituição de ensino e região
-#colors = {'Yes': 'red', 'No': 'blue'}
+uf_selecionada = st.selectbox(
+    'Selecione a UF da escola:',
+    ufs
+)
 
-#for i, predictor in enumerate(df.drop(columns=['Churn', 'TotalCharges', 'MonthlyCharges', 'tenure'])):
- #   plt.figure(i, figsize=(6, 4))
-   # ax = sns.countplot(data=df, x=predictor, hue='Churn', palette=colors)
-  #  plt.title(predictor)
-    
-    # Add values on top of each bar
-    #for container in ax.containers:
-       # ax.bar_label(container)
-    
-  #  plt.tight_layout()
-    #plt.show()
+df_uf = df[df['SG_UF_ESC'] == uf_selecionada]
+
+municipios = sorted(df_uf['NO_MUNICIPIO_ESC'].dropna().unique())
+
+municipio_selecionado = st.selectbox(
+    'Selecione o município da escola:',
+    municipios
+)
+
+df_mun = df_uf[df_uf['NO_MUNICIPIO_ESC'] == municipio_selecionado]
+
+fig = px.histogram(
+    df_mun,
+    x='NU_NOTA_MT',
+    title='Distribuição da nota de Matemática'
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+
+
 
 
 
