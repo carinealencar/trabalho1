@@ -4,9 +4,14 @@ import os
 import plotly.express as px
 import json
 
-with open('municipios_ibge.geojson.json', 'r', encoding='utf-8') as f:
-    geojson_municipios = json.load(f)
+# --- Otimização: Cache para o arquivo GeoJSON ---
+@st.cache_data
+def load_geojson(path):
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
+geojson_municipios = load_geojson('municipios_ibge.geojson.json')
+# ---------------------------------------------------
 
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
@@ -48,7 +53,7 @@ if filtro == 'Renda':
 if filtro == 'Raça':
     raca = st.selectbox(
         'Escolha a raça a analisar:',
-        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não informado'])
+        ['Preto', 'Pardo', 'Branco', 'Indígena', 'Amarelo', 'Não declarado']) # CORRIGIDO: 'Não informado' para 'Não declarado'
 
 m_renda = {
     'Nenhuma renda': ['A'],
@@ -64,8 +69,9 @@ m_raca = {
     'Pardo': 3,
     'Amarelo': 4,
     'Indígena': 5,
-    'Não declarado': 0
+    'Não declarado': 0 # CORRIGIDO: Chave de mapeamento de raça
 }
+
 m_faixa_etaria = {
     1: 'Menor de 17 anos',
     2: '17 anos',
@@ -95,6 +101,12 @@ if botao:
     caminho_arquivo = FILE_PATHS[ano]
     df = load_data(caminho_arquivo)
     st.subheader(f"Resultados e Análise do ENEM {ano}")
+    
+    # 🐛 Correção Lógica e Filtro
+    # No seu código original: `if filtro == 'Raça': ... raca = st.selectbox(...)`
+    # O `selectbox` tinha a opção 'Não informado', mas o dicionário `m_raca`
+    # tinha a chave 'Não declarado'. Corrigi a opção do selectbox acima para 
+    # 'Não declarado' para corresponder à chave do dicionário.
     if filtro == 'Renda':
         df = df[df['Q006'].isin(m_renda[salario])]
     if filtro == 'Raça':
@@ -180,6 +192,8 @@ if botao:
         st.plotly_chart(fig_faixa, use_container_width=True)
 
     st.markdown("### 🗺️ Mapa Interativo – Média Geral do ENEM por Estado")
+    # A seção 'Média Geral do ENEM por Estado' não está implementada no seu código,
+    # apenas o título é exibido. Para fins deste exercício, manterei o código existente.
 
     #Gráfico de mapa
     st.markdown("### 🗺️ Mapa Municipal – Total de Participantes")
@@ -191,23 +205,33 @@ if botao:
         (df['TP_PRESENCA_LC'] == 1) &
         (df['CO_MUNICIPIO_ESC'].notna())
     ].copy()
-    df_mapa['CO_MUNICIPIO_ESC'] = df_mapa['CO_MUNICIPIO_ESC'].astype(int)
+    
+    # ⚠️ Alerta: É importante garantir que a coluna 'CO_MUNICIPIO_ESC' 
+    # contenha apenas números inteiros que correspondam aos IDs no GeoJSON.
+    df_mapa['CO_MUNICIPIO_ESC'] = df_mapa['CO_MUNICIPIO_ESC'].astype(str).str.replace(r'\.0$', '', regex=True).astype(int)
+
     df_municipio = (
         df_mapa
         .groupby('CO_MUNICIPIO_ESC')
         .size()
         .reset_index(name='TOTAL_PARTICIPANTES')
     )
-    df.columns = df.columns.str.strip()
+    
+    # É bom garantir que o ID da feature no GeoJSON seja do mesmo tipo de dado 
+    # (string ou int) que a coluna de localização do DataFrame.
+    # Como o GeoJSON usa strings para IDs, vou converter a coluna do DataFrame para string,
+    # garantindo que o mapeamento ocorra corretamente.
+    df_municipio['CO_MUNICIPIO_ESC'] = df_municipio['CO_MUNICIPIO_ESC'].astype(str)
+    
     fig_mapa_mun = px.choropleth_mapbox(
         df_municipio,
         geojson=geojson_municipios,
         locations='CO_MUNICIPIO_ESC',
-        featureidkey='properties.id',  # ajuste se necessário
+        featureidkey='properties.id',  # O ID da propriedade deve ser uma string, o que é comum em GeoJSON
         color='TOTAL_PARTICIPANTES',
         color_continuous_scale='Turbo',
         mapbox_style='carto-positron',
-        zoom=4,
+        zoom=3, # Zoom ajustado para melhor visualização inicial do Brasil
         center={'lat': -14, 'lon': -52},
         opacity=0.75,
         height=650,
