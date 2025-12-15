@@ -194,14 +194,12 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
-#dados = pd.DataFrame({
-   # 'NO_MUNICIPIO_ESC',
-   # 'SG_UF_ESC'
-#})
+instituicoes = {
+    'xxxx': df.ins[df['TP_ANO_CONCLUIU'] == 1]}
 
-#fig = px.bar(dados, #x='NO_MUNICIPIO_ESC', y='SG_UF_ESC', #title='Tipos de instituições de #ensino)
-#fig.show()
-#color='blue'
+    df_ins = {pd.DataFrame.from_dict(instituicoes, orient='index', columns=['Instituições']).reset_index().rename(columns={'index': 'Tipos'}))
+    fig = px.bar(df_ins, x='Tipos', y='Instituições', title='Tipos de instituições de ensino')
+    st.plotly_chart(fig, use_container_width=True)
 
 
 
