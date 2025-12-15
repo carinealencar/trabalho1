@@ -196,7 +196,7 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
- tabela_uf = (
+    tabela_uf = (
     df_filtrado
     .groupby('SG_UF_ESC')
     .size()
