@@ -204,8 +204,8 @@ if botao:
 
 
 
-    px.bar(df['SG_UF_ESC', 'Municípios', 'Unidade da federação')
-    fig = px.bar(municipios, 
+    px.bar(df['SG_UF_ESC'], 'Municípios', 'Unidade da federação')
+    fig = px.bar(df, 
              y="Unidade da Federação", 
              x="Municípios", 
              color="Blue",
