@@ -226,9 +226,11 @@ if botao:
     
     df_municipio[coluna_municipio] = (
         df_municipio[coluna_municipio]
+        .astype("Int64")      # remove o .0 corretamente
         .astype(str)
         .str.zfill(7)
     )
+
     
     st.write("Exemplo GeoJSON ID:", geojson_municipios['features'][0]['properties']['id'])
     st.write("Exemplo DF ID:", df_municipio[coluna_municipio].iloc[0])
