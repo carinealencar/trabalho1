@@ -95,3 +95,62 @@ m_faixa_etaria = {
 
 botao = st.button('Exibir gráficos')
 
+
+                }
+            )
+            st.plotly_chart(fig_faixa, use_container_width=True)
+        else:
+             st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
+
+    
+    st.write(geojson_municipios['features'][0]['properties'])
+    st.stop()
+
+    st.markdown("## 🗺️ Média Geral das Notas por Município")
+    
+    colunas_notas = [
+        'NU_NOTA_CH',
+        'NU_NOTA_CN',
+        'NU_NOTA_MT',
+        'NU_NOTA_LC',
+        'NU_NOTA_REDACAO'
+    ]
+    
+    coluna_municipio = 'CO_MUNICIPIO_ESC'
+    
+    df_mapa = df[
+        (df['TP_PRESENCA_CH'] == 1) &
+        (df['TP_PRESENCA_CN'] == 1) &
+        (df['TP_PRESENCA_MT'] == 1) &
+        (df['TP_PRESENCA_LC'] == 1) &
+        (df[colunas_notas].notna().all(axis=1)) &
+        (df[coluna_municipio].notna())
+    ].copy()
+    
+    if df_mapa.empty:
+        st.warning(
+            f"Dados insuficientes para gerar o mapa de municípios do ENEM {ano} após os filtros."
+        )
+    else:
+        df_mapa['MEDIA_GERAL'] = df_mapa[colunas_notas].mean(axis=1)
+    
+        df_municipio = (
+            df_mapa
+            .groupby(coluna_municipio, as_index=False)['MEDIA_GERAL']
+            .mean()
+        )
+    
+    df_municipio[coluna_municipio] = (
+        df_municipio[coluna_municipio]
+        .astype(str)
+        .str.zfill(7)
+    )
+
+    fig_mapa = px.choropleth(
+        df_municipio,
+        geojson=geojson_municipios,
+        locations=coluna_municipio,
+        featureidkey='properties.id',
+        color='MEDIA_GERAL',
+        color_continuous_scale='Viridis',
+        labels={'MEDIA_GERAL': 'Média Geral'})
