@@ -196,7 +196,7 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
-    ufs = {'Norte': 'AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO', 'Nordeste': 'AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE', 'Centro-Oeste': 'DF', 'GO', 'MT', 'MS', 'Sudeste': 'ES', 'SP', 'RJ', 'MG', 'SuL': 'PR', 'RS', 'SC'}
+    ufs = {'AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO','AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE','DF', 'GO', 'MT', 'MS', 'ES', 'SP', 'RJ', 'MG', 'PR', 'RS', 'SC'}
     placar_ufs = {'NO_MUNICIPIO_ESC': [], 'SG_UF_ESC': []}
     for regiao, coluna in ufs.items():
         contagem = df[coluna].value_counts().sort_index()
