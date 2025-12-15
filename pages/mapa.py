@@ -4,6 +4,7 @@ import os
 import plotly.express as px
 import json
 import json
+streamlit run principal.py
 
 @st.cache_data
 def load_geojson(path):
