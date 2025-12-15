@@ -245,4 +245,5 @@ if botao:
         title=f'Média Geral das Notas do ENEM por Município — {ano}' 
     ) 
     fig_mapa.update_geos(fitbounds="locations", visible=False) 
-    fig_mapa.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}) st.plotly_chart(fig_mapa, use_container_width=True)
+    fig_mapa.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}) 
+    st.plotly_chart(fig_mapa, use_container_width=True)
