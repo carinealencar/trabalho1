@@ -194,13 +194,23 @@ if botao:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
 
 
-    st.markdown("### 📮 Instituição de ensino por nota")
-    
-color_discrete_sequence = ["blue"]
+    st.markdown("### 📮 Instituições de ensino por nota")
 
-df_municipios =  st.dataframe(sg_uf_esc, no_municipio_esc=True)
+    municipios = {'Municípios':'NO_MUNICIPIO_ESC', 'Unidade da Federação': 'SG_UF_ESC'}
 
+    range_x=[100, 100],
+    range_y=[100, 100]
 
+    px.bar(df, 'Municípios', 'Unidade da federação')
+    fig = px.bar(municipios, 
+             y="Unidade da Federação", 
+             x="Municípios", 
+             color="Blue",
+            title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
+            barmode='group')
+    fig.update_layout(
+        xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
+)
 
 
 
