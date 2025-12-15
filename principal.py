@@ -21,10 +21,8 @@ FILE_PATHS = {
 
 @st.cache_data
 def load_geojson(path):
-    # Certifique-se de que o arquivo 'municipios_ibge.geojson.json' está no mesmo diretório
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
-
 geojson_municipios = load_geojson('municipios_ibge.geojson.json')
 
 
