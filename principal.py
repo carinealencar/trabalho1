@@ -196,10 +196,12 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino por nota")
 
-    municipios = {'Municípios':'NO_MUNICIPIO_ESC', 'Unidade da Federação': 'SG_UF_ESC'}
+    df['NO_MUNICIPIO_ESC']
+    df['SG_UF_ESC']
 
 
-    px.bar(municipios, 'Municípios', 'Unidade da federação')
+
+    px.bar(df, 'Municípios', 'Unidade da federação')
     fig = px.bar(municipios, 
              y="Unidade da Federação", 
              x="Municípios", 
