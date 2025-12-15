@@ -196,18 +196,14 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
+ tabela_uf = (
+    df_filtrado
+    .groupby('SG_UF_ESC')
+    .size()
+    .reset_index(name='Quantidade de participantes')
+    .sort_values('Quantidade de participantes', ascending=False)
+     st.dataframe(tabela_uf, use_container_width=True)
 
-st.write(df.head())
-st.write(df.columns)
-
-fig = px.bar(
-    df,
-    x='NO_MUNICIPIO_ESC',
-    y='SG_UF_ESC',
-    title='Instituições de ensino por município e UF'
-)
-
-st.plotly_chart(fig, use_container_width=True)
 
 
 
