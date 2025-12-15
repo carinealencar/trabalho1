@@ -234,7 +234,7 @@ if botao:
 
     fig_mapa = px.choropleth(
         df_municipio,
-        geojson = municipios_ibge.geojson.json,
+        geojson = geojson_municipios,
         locations=coluna_municipio,
         featureidkey='properties.id',
         color='MEDIA_GERAL',
