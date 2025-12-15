@@ -213,6 +213,9 @@ if botao:
 )
 
 
+st.write(df)
+
+
 
 
 
