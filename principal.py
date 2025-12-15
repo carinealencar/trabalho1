@@ -203,6 +203,8 @@ if botao:
     df['SG_UF_ESC']
 
 
+    st.write(df.head())
+    st.write(df.columns)
 
     px.bar(df, 'Municípios', 'Unidade da federação')
     fig = px.bar(df, 
