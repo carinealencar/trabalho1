@@ -194,7 +194,7 @@ if botao:
     st.title("🗺️ Visualização de Mapa (Média das Notas por Município)")
     
     colunas_notas = ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-    df_mapa = df_enem[df_enem[colunas_notas].notna().all(axis=1)].copy()
+    df_mapa = df[df[colunas_notas].notna().all(axis=1)].copy()
     
     df_mapa['MEDIA_GERAL'] = df_mapa[colunas_notas].mean(axis=1)
     df_media_municipio = (
