@@ -196,7 +196,16 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
-    placar_data = {'NO_MUNICIPIO_ESC': [], 'SG_UF_ESC': []}
+    ufs = {'Norte': 'AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO', 'Nordeste': 'AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE', 'Centro-Oeste': 'DF', 'GO', 'MT', 'MS', 'Sudeste': 'ES', 'SP', 'RJ', 'MG', 'SuL': 'PR', 'RS', 'SC'}
+    placar_ufs = {'NO_MUNICIPIO_ESC': [], 'SG_UF_ESC': []}
+    for regiao, coluna in ufs.items():
+        contagem = df[coluna].value_counts().sort_index()
+        placar_ufs['NO_MUNICIPIO_ESC'].append(regiao)
+        placar_ufs['SG_UF_ESC'].append(contagem.get(1,0)
+    placar_regiao = pd.DataFrame(placar_ufs)
+        st.dataframe(placar_regiao, use_container_width=True)
+    
+     
     #df['NO_MUNICIPIO_ESC']
     #df['SG_UF_ESC']
 
