@@ -36,6 +36,27 @@ def load_data(path):
         low_memory=False
     )
 
+@st.cache_data(show_spinner=False)
+def preparar_dados_mapa(df, coluna_municipio):
+    df_municipio = (df[
+            (df['TP_PRESENCA_CH'] == 1) &
+            (df['TP_PRESENCA_CN'] == 1) &
+            (df['TP_PRESENCA_MT'] == 1) &
+            (df['TP_PRESENCA_LC'] == 1) &
+            (df[coluna_municipio].notna())
+        ]
+        .groupby(coluna_municipio)[
+            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC', 'NU_NOTA_REDACAO']].mean().reset_index())
+
+    df_municipio['MEDIA_GERAL'] = df_municipio[
+        ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+    ].mean(axis=1)
+
+    df_municipio[coluna_municipio] = df_municipio[coluna_municipio].astype(int)
+
+    return df_municipio
+
+
 st.title('Dashboard das notas do Enem nos últimos anos 📊')
 st.header('Filtros:')
 
@@ -190,48 +211,29 @@ if botao:
             st.plotly_chart(fig_faixa, use_container_width=True)
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
-    
-
+            
     st.markdown("## 🗺️ Média Geral das Notas por Município")
 
-    colunas_notas = ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC', 'NU_NOTA_REDACAO']
-
-    df_mapa = df[
-        (df[colunas_notas].notna().all(axis=1)) &
-        (df['CO_MUNICIPIO_ESC'].notna())
-    ].copy()
-
-    df_mapa['MEDIA_GERAL'] = df_mapa[colunas_notas].mean(axis=1)
-    df_municipio = (df_mapa.groupby('CO_MUNICIPIO_ESC', as_index=False)['MEDIA_GERAL'].mean())
-    df_municipio['CO_MUNICIPIO_ESC'] = df_municipio['CO_MUNICIPIO_ESC'].astype(str)
-
-    if not df_municipio.empty:
-
+    with st.spinner("Preparando dados do mapa..."):
+        df_municipio = preparar_dados_mapa(df, coluna_municipio)
+    
+    if df_municipio.empty:
+        st.warning(
+            f"Dados insuficientes para gerar o mapa de municípios do ENEM {ano} após os filtros."
+        )
+    else:
         fig_mapa = px.choropleth(
             df_municipio,
             geojson=geojson_municipios,
-            locations='CO_MUNICIPIO_ESC',
-            featureidkey='properties.id',
+            locations=coluna_municipio,
+            featureidkey='properties.cod_ibge',
             color='MEDIA_GERAL',
             color_continuous_scale='Viridis',
             labels={'MEDIA_GERAL': 'Média Geral'},
-            title=f'Média Geral das Notas do ENEM por Município – {ano}'
+            title=f'Média Geral das Notas do ENEM por Município — {ano}'
         )
-
-        fig_mapa.update_geos(
-            fitbounds="locations",
-            visible=False
-        )
-
-        fig_mapa.update_layout(
-            margin={"r": 0, "t": 50, "l": 0, "b": 0}
-        )
-
+    
+        fig_mapa.update_geos(fitbounds="locations", visible=False)
+        fig_mapa.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0})
+    
         st.plotly_chart(fig_mapa, use_container_width=True)
-
-    else:
-        st.warning(
-            f"Dados insuficientes para gerar o mapa por município no ENEM {ano}."
-        )
-
-
