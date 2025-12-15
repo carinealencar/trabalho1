@@ -198,6 +198,9 @@ if botao:
 
     ufs = {'AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO','AL', 'BA', 'CE', 'MA', 'PB', 
            'PE', 'PI', 'RN', 'SE','DF', 'GO', 'MT', 'MS', 'ES', 'SP', 'RJ', 'MG', 'PR', 'RS', 'SC'}
+
+    df = df[df['sg_uf_esc'].isin(ufs)]
+
     
      
     #df['NO_MUNICIPIO_ESC']
