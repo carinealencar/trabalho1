@@ -213,7 +213,7 @@ if botao:
              barmode='group')
      fig.update_layout(
         xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
-)
+
 
 
 
