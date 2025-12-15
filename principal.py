@@ -218,11 +218,7 @@ if botao:
 #)
 
 
-df_uf = (
-    df
-    .groupby('SG_UF_ESC', as_index=False)
-    .agg(media_nota=('NU_NOTA_MT', 'mean'))
-)
+df_uf = (df.groupby('SG_UF_ESC', as_index=False).agg(media_nota=('NU_NOTA_MT', 'mean')))
 
 # =========================
 # 2. Gráfico
