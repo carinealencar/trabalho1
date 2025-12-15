@@ -196,13 +196,17 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
-    tabela_uf = (
-    df_filtrado
-    .groupby('SG_UF_ESC')
-    .size()
-    .reset_index(name='Quantidade de participantes')
-    .sort_values('Quantidade de participantes', ascending=False)
-     st.dataframe(tabela_uf, use_container_width=True))
+dados = pd.DataFrame({
+    'NO_MUNICIPIO_ESC',
+    'SG_UF_ESC'
+})
+
+fig = px.bar(dados, x='NO_MUNICIPIO_ESC', y='SG_UF_ESC', title='Tipos de instituições de ensino)
+fig.show()
+color='blue'
+
+
+
 
 
 
