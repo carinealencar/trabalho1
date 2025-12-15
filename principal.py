@@ -196,23 +196,55 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino por nota")
 
-    municipios = {'Municípios':'NO_MUNICIPIO_ESC', 'Unidade da Federação': 'SG_UF_ESC'}
+    #municipios = {'Municípios':'NO_MUNICIPIO_ESC', 'Unidade da Federação': 'SG_UF_ESC'}
 
-    range_x=[100, 100],
-    range_y=[100, 100]
 
-    px.bar(df, 'Municípios', 'Unidade da federação')
-    fig = px.bar(municipios, 
-             y="Unidade da Federação", 
-             x="Municípios", 
-             color="Blue",
-            title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
-            barmode='group')
-    fig.update_layout(
-        xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
+  #  px.bar(
+   # df_mun,
+   # x='NO_MUNICIPIO_ESC',
+   # y='Quantidade',
+    #title='Top 20 municípios por número de escolas'
+#)
+
+    #px.bar(df, 'Municípios', 'Unidade da federação')
+    #fig = px.bar(municipios, 
+          #   y="Unidade da Federação", 
+            # x="Municípios", 
+            # color="Blue",
+           # title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
+          #  barmode='group')
+    #fig.update_layout(
+     #   xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
+#)
+
+
+df_uf = (
+    df
+    .groupby('SG_UF_ESC', as_index=False)
+    .agg(media_nota=('NU_NOTA_MT', 'mean'))
 )
 
+# =========================
+# 2. Gráfico
+# =========================
+fig = px.bar(
+    df_uf,
+    x='SG_UF_ESC',
+    y='media_nota',
+    title='Média da nota de Matemática por UF da escola (ENEM)',
+    labels={
+        'SG_UF_ESC': 'Unidade da Federação',
+        'media_nota': 'Nota média'
+    }
+)
 
+fig.update_layout(
+    xaxis_title='Unidade da Federação',
+    yaxis_title='Nota média',
+    xaxis_tickangle=30
+)
+
+st.plotly_chart(fig, use_container_width=True)
 
 
     
