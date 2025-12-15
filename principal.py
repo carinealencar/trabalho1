@@ -196,8 +196,8 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino por nota")
 
-    df['NO_MUNICIPIO_ESC']
-    df['SG_UF_ESC']
+    df['NO_MUNICIPIO_ESC'] = 10
+    df['SG_UF_ESC'] = 10
 
 
 
@@ -212,18 +212,7 @@ if botao:
    #     xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
 #)
 
-df = pd.concat(
-    [load(p).assign(ANO=a) for a, p in FILES.items()],
-    ignore_index=True
-)
 
-fig = px.bar(
-    df.groupby('SG_UF_ESC')['NU_NOTA_MT'].mean().reset_index(),
-    x='SG_UF_ESC',
-    y='NU_NOTA_MT'
-)
-
-st.plotly_chart(fig, use_container_width=True)
 
 
 
