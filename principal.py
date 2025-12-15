@@ -196,8 +196,8 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino por nota")
 
-    df['NO_MUNICIPIO_ESC'] = 10
-    df['SG_UF_ESC'] = 10
+    df['NO_MUNICIPIO_ESC']=10
+    df['SG_UF_ESC']=10
 
 
 
