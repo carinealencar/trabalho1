@@ -226,13 +226,13 @@ if botao:
             .mean()
         )
     
-        df_municipio[coluna_municipio] = df_municipio[coluna_municipio].astype(int)
+        df_municipio[coluna_municipio] = df_municipio[coluna_municipio].astype(str)
     
         fig_mapa = px.choropleth(
             df_municipio,
             geojson=geojson_municipios,
             locations=coluna_municipio,
-            featureidkey='properties.cod_ibge',
+            featureidkey='properties.id',
             color='MEDIA_GERAL',
             color_continuous_scale='Viridis',
             labels={'MEDIA_GERAL': 'Média Geral'},
