@@ -196,30 +196,18 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
-    ufs = {'AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO','AL', 'BA', 'CE', 'MA', 'PB', 
-           'PE', 'PI', 'RN', 'SE','DF', 'GO', 'MT', 'MS', 'ES', 'SP', 'RJ', 'MG', 'PR', 'RS', 'SC'}
-     
-    df['NO_MUNICIPIO_ESC']
-    df['SG_UF_ESC']
 
+st.write(df.head())
+st.write(df.columns)
 
-    st.write(df.head())
-    st.write(df.columns)
+fig = px.bar(
+    df,
+    x='NO_MUNICIPIO_ESC',
+    y='SG_UF_ESC',
+    title='Instituições de ensino por município e UF'
+)
 
-    px.bar(df, 'Municípios', 'Unidade da federação')
-    fig = px.bar(df, 
-             y="Unidade da Federação", 
-             x="Municípios", 
-             color="Blue",
-             title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
-             barmode='group')
-    fig.update_layout(
-    xaxis={"tick0":1995, "dtick":1, "tickangle": 30})
-
-
-
-
-
+st.plotly_chart(fig, use_container_width=True)
 
 
 
