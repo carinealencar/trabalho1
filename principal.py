@@ -212,7 +212,7 @@ if botao:
              title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
              barmode='group')
     fig.update_layout(
-    xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
+    xaxis={"tick0":1995, "dtick":1, "tickangle": 30})
 
 
 
