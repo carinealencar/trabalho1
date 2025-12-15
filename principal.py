@@ -231,14 +231,6 @@ if botao:
         .str.zfill(7)
     )
 
-    
-    st.write("Exemplo GeoJSON ID:", geojson_municipios['features'][0]['properties']['id'])
-    st.write("Exemplo DF ID:", df_municipio[coluna_municipio].iloc[0])
-    st.write("Tipos:", 
-         type(geojson_municipios['features'][0]['properties']['id']),
-         df_municipio[coluna_municipio].dtype)
-
-
     fig_mapa = px.choropleth(
         df_municipio,
         geojson = geojson_municipios,
