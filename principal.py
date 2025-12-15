@@ -194,15 +194,16 @@ if botao:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
 
 
-    st.markdown("### 📮 Instituições de ensino por nota")
+    st.markdown("### 📮 Instituições de ensino")
 
-    df['NO_MUNICIPIO_ESC']=10
-    df['SG_UF_ESC']=10
+    placar_data = {'NO_MUNICIPIO_ESC': [], 'SG_UF_ESC': []}
+    #df['NO_MUNICIPIO_ESC']
+    #df['SG_UF_ESC']
 
 
 
-  #  px.bar(df, 'Municípios', 'Unidade da federação')
-  #  fig = px.bar(municipios, 
+    #px.bar(df, 'Municípios', 'Unidade da federação')
+    #fig = px.bar(municipios, 
            #  y="Unidade da Federação", 
            #  x="Municípios", 
            #  color="Blue",
