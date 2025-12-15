@@ -35,10 +35,26 @@ def load_data(path):
         compression='zip',
         low_memory=False
     )
-
+    
 @st.cache_data(show_spinner=False)
-def preparar_dados_mapa(df, coluna_municipio):
-    df_municipio = (df[
+def preparar_dados_mapa(
+    caminho_arquivo,
+    coluna_municipio,
+    filtro,
+    salario=None,
+    raca=None
+):
+    df = load_data(caminho_arquivo)
+
+    # Aplica filtros
+    if filtro == 'Renda' and salario is not None:
+        df = df[df['Q006'].isin(m_renda[salario])]
+
+    if filtro == 'Raça' and raca is not None:
+        df = df[df['TP_COR_RACA'] == m_raca[raca]]
+
+    df_municipio = (
+        df[
             (df['TP_PRESENCA_CH'] == 1) &
             (df['TP_PRESENCA_CN'] == 1) &
             (df['TP_PRESENCA_MT'] == 1) &
@@ -46,7 +62,11 @@ def preparar_dados_mapa(df, coluna_municipio):
             (df[coluna_municipio].notna())
         ]
         .groupby(coluna_municipio)[
-            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC', 'NU_NOTA_REDACAO']].mean().reset_index())
+            ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
+        ]
+        .mean()
+        .reset_index()
+    )
 
     df_municipio['MEDIA_GERAL'] = df_municipio[
         ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
@@ -55,7 +75,6 @@ def preparar_dados_mapa(df, coluna_municipio):
     df_municipio[coluna_municipio] = df_municipio[coluna_municipio].astype(int)
 
     return df_municipio
-
 
 st.title('Dashboard das notas do Enem nos últimos anos 📊')
 st.header('Filtros:')
@@ -214,9 +233,15 @@ if botao:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
             
     st.markdown("## 🗺️ Média Geral das Notas por Município")
-
     with st.spinner("Preparando dados do mapa..."):
-        df_municipio = preparar_dados_mapa(df, coluna_municipio)
+        df_municipio = preparar_dados_mapa(
+            caminho_arquivo=caminho_arquivo,
+            coluna_municipio=coluna_municipio,
+            filtro=filtro,
+            salario=salario if filtro == 'Renda' else None,
+            raca=raca if filtro == 'Raça' else None
+        )
+
     
     if df_municipio.empty:
         st.warning(
