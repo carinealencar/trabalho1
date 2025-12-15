@@ -202,7 +202,7 @@ if botao:
     .size()
     .reset_index(name='Quantidade de participantes')
     .sort_values('Quantidade de participantes', ascending=False)
-     st.dataframe(tabela_uf, use_container_width=True)
+     st.dataframe(tabela_uf, use_container_width=True))
 
 
 
