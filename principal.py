@@ -196,12 +196,12 @@ if botao:
 
     st.markdown("### 📮 Instituições de ensino")
 
-dados = pd.DataFrame({
-    'NO_MUNICIPIO_ESC',
-    'SG_UF_ESC'
-})
+#dados = pd.DataFrame({
+   # 'NO_MUNICIPIO_ESC',
+   # 'SG_UF_ESC'
+#})
 
-fig = px.bar(dados, x='NO_MUNICIPIO_ESC', y='SG_UF_ESC', title='Tipos de instituições de ensino)
+#fig = px.bar(dados, #x='NO_MUNICIPIO_ESC', y='SG_UF_ESC', #title='Tipos de instituições de #ensino)
 fig.show()
 color='blue'
 
