@@ -120,6 +120,7 @@ botao = st.button('Exibir gráficos')
 if botao:
     caminho_arquivo = FILE_PATHS[ano]
     df = load_data(caminho_arquivo)
+    coluna_municipio = ['CO_MUNICIPIO_ESC']
     st.subheader(f"Resultados e Análise do ENEM {ano}")
     
     if filtro == 'Renda':
