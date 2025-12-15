@@ -191,7 +191,10 @@ if botao:
             st.plotly_chart(fig_faixa, use_container_width=True)
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
-            
+
+    st.write(geojson_municipios['features'][0]['properties'])
+    st.stop()
+
     st.markdown("## 🗺️ Média Geral das Notas por Município")
     
     colunas_notas = [
@@ -226,8 +229,12 @@ if botao:
             .mean()
         )
     
-        df_municipio[coluna_municipio] = df_municipio[coluna_municipio].astype(str).str.zfill(7)]
-    
+    df_municipio[coluna_municipio] = (
+        df_municipio[coluna_municipio]
+        .astype(str)
+        .str.zfill(7)
+    )
+
         fig_mapa = px.choropleth(
             df_municipio,
             geojson=geojson_municipios,
