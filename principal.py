@@ -4,10 +4,6 @@ import os
 import plotly.express as px
 import json
 
-st.write("APP INICIOU")
-st.stop()
-
-
 st.set_page_config(
     page_title="Dashboard das notas do Enem nos últimos anos",
     page_icon="📊",
@@ -239,13 +235,11 @@ if botao:
         .str.zfill(7)
     )
 
-        fig_mapa = px.choropleth(
-            df_municipio,
-            geojson=geojson_municipios,
-            locations=coluna_municipio,
-            featureidkey='properties.id',
-            color='MEDIA_GERAL',
-            color_continuous_scale='Viridis',
-            labels={'MEDIA_GERAL': 'Média Geral'},
-
-
+    fig_mapa = px.choropleth(
+        df_municipio,
+        geojson=geojson_municipios,
+        locations=coluna_municipio,
+        featureidkey='properties.id',
+        color='MEDIA_GERAL',
+        color_continuous_scale='Viridis',
+        labels={'MEDIA_GERAL': 'Média Geral'})
