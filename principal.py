@@ -202,8 +202,8 @@ if botao:
         'NU_NOTA_REDACAO'
     ]
     
-    # Descobre a coluna de município
     coluna_municipio = 'CO_MUNICIPIO_ESC'
+    
     df_mapa = df[
         (df['TP_PRESENCA_CH'] == 1) &
         (df['TP_PRESENCA_CN'] == 1) &
