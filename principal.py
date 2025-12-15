@@ -198,26 +198,22 @@ if botao:
 
     ufs = {'AC', 'AP', 'AM', 'PA', 'RO', 'RR', 'TO','AL', 'BA', 'CE', 'MA', 'PB', 
            'PE', 'PI', 'RN', 'SE','DF', 'GO', 'MT', 'MS', 'ES', 'SP', 'RJ', 'MG', 'PR', 'RS', 'SC'}
-
-    df = df[df['sg_uf_esc'].isin(ufs)]
-
-    
      
-    #df['NO_MUNICIPIO_ESC']
-    #df['SG_UF_ESC']
+    df['NO_MUNICIPIO_ESC']
+    df['SG_UF_ESC']
 
 
 
-    #px.bar(df, 'Municípios', 'Unidade da federação')
-    #fig = px.bar(municipios, 
-           #  y="Unidade da Federação", 
-           #  x="Municípios", 
-           #  color="Blue",
-           # title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
-           # barmode='group')
-  #  fig.update_layout(
-   #     xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
-#)
+    px.bar(df['SG_UF_ESC', 'Municípios', 'Unidade da federação')
+    fig = px.bar(municipios, 
+             y="Unidade da Federação", 
+             x="Municípios", 
+             color="Blue",
+             title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
+             barmode='group')
+     fig.update_layout(
+        xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
+)
 
 
 
