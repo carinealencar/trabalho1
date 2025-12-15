@@ -201,19 +201,31 @@ if botao:
 
 
 
-    px.bar(df, 'Municípios', 'Unidade da federação')
-    fig = px.bar(municipios, 
-             y="Unidade da Federação", 
-             x="Municípios", 
-             color="Blue",
-            title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
-            barmode='group')
-    fig.update_layout(
-        xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
+  #  px.bar(df, 'Municípios', 'Unidade da federação')
+  #  fig = px.bar(municipios, 
+           #  y="Unidade da Federação", 
+           #  x="Municípios", 
+           #  color="Blue",
+           # title="Instituições de ensino por nota entre os anos de 2020 a 2023, Brasil",
+           # barmode='group')
+  #  fig.update_layout(
+   #     xaxis={"tick0":1995, "dtick":1, "tickangle": 30}
+#)
+
+df = pd.concat(
+    [load(p).assign(ANO=a) for a, p in FILES.items()],
+    ignore_index=True
 )
 
+fig = px.bar(
+    df.groupby('SG_UF_ESC')['NU_NOTA_MT'].mean().reset_index(),
+    x='SG_UF_ESC',
+    y='NU_NOTA_MT'
+)
 
-st.write(df)
+st.plotly_chart(fig, use_container_width=True)
+
+
 
 
 
