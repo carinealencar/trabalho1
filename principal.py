@@ -231,6 +231,13 @@ if botao:
         .str.zfill(7)
     )
 
+    
+    mapa_nomes = {
+        f["properties"]["id"]: f["properties"]["name"]
+        for f in geojson_municipios["features"]
+    }
+    df_municipio["NOME_MUNICIPIO"] = df_municipio[coluna_municipio].map(mapa_nomes)
+
     fig_mapa = px.choropleth(
         df_municipio,
         geojson = geojson_municipios,
@@ -239,8 +246,15 @@ if botao:
         color='MEDIA_GERAL',
         color_continuous_scale='Viridis',
         labels={'MEDIA_GERAL': 'Média Geral'},
-        title=f'Média Geral das Notas do ENEM por Município — {ano}' 
+        title=f'Média Geral das Notas do ENEM por Município — {ano}',
+        hover_name="NOME_MUNICIPIO"
     ) 
+    
+    fig_mapa.update_traces(
+        hovertemplate=
+        "<b>%{hovertext}</b><br>" +
+        "Média Geral: %{z:.2f}<extra></extra>"
+    )
     fig_mapa.update_geos(fitbounds="locations", visible=False) 
     fig_mapa.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}) 
     st.plotly_chart(fig_mapa, use_container_width=True)
