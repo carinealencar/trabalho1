@@ -226,7 +226,7 @@ if botao:
             .mean()
         )
     
-        df_municipio[coluna_municipio] = df_municipio[coluna_municipio].astype(str)
+        df_municipio[coluna_municipio] = df_municipio[coluna_municipio].astype(str).str.zfill(7)]
     
         fig_mapa = px.choropleth(
             df_municipio,
