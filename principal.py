@@ -191,48 +191,47 @@ if botao:
         else:
              st.warning("Dados insuficientes para o gráfico de Notas por Faixa Etária.")
     
-    st.title("🗺️ Visualização de Mapa (Média das Notas por Município)")
-    
-    colunas_notas = ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC']
-    df_mapa = df[df[colunas_notas].notna().all(axis=1)].copy()
-    
+
+    st.markdown("## 🗺️ Média Geral das Notas por Município")
+
+    colunas_notas = ['NU_NOTA_CH', 'NU_NOTA_CN', 'NU_NOTA_MT', 'NU_NOTA_LC', 'NU_NOTA_REDACAO']
+
+    df_mapa = df[
+        (df[colunas_notas].notna().all(axis=1)) &
+        (df['CO_MUNICIPIO_ESC'].notna())
+    ].copy()
+
     df_mapa['MEDIA_GERAL'] = df_mapa[colunas_notas].mean(axis=1)
-    df_media_municipio = (
-        df_mapa.groupby('CO_MUNICIPIO_ESC')['MEDIA_GERAL']
-        .mean()
-        .reset_index()
-        .rename(columns={'CO_MUNICIPIO_ESC': 'CODIGO_IBGE', 'MEDIA_GERAL': 'Média Geral ENEM'})
-    )
-    df_media_municipio['CODIGO_IBGE'] = df_media_municipio['CODIGO_IBGE'].astype(str)
-    
-    st.subheader(f"Média Geral do ENEM {ano_selecionado} por Município")
-    
-    # 3. Cria o Mapa Choropleth com Plotly Express
-    if not df_media_municipio.empty and geojson_municipios:
-        fig = px.choropleth(
-            df_media_municipio,
+    df_municipio = (df_mapa.groupby('CO_MUNICIPIO_ESC', as_index=False)['MEDIA_GERAL'].mean())
+    df_municipio['CO_MUNICIPIO_ESC'] = df_municipio['CO_MUNICIPIO_ESC'].astype(str)
+
+    if not df_municipio.empty:
+
+        fig_mapa = px.choropleth(
+            df_municipio,
             geojson=geojson_municipios,
-            locations='CODIGO_IBGE',  # Coluna no DataFrame com o ID do município
-            featureidkey="properties.id",  # Coluna no GeoJSON que corresponde ao ID
-            color='Média Geral ENEM',           
-            hover_name='CODIGO_IBGE',         # Informação mostrada ao passar o mouse (pode ser ajustado)
-            color_continuous_scale="Viridis",
-            scope="south america",            # Foca na região do Brasil
-            title=f'Média Geral do ENEM {ano_selecionado} por Município'
+            locations='CO_MUNICIPIO_ESC',
+            featureidkey='properties.id',
+            color='MEDIA_GERAL',
+            color_continuous_scale='Viridis',
+            labels={'MEDIA_GERAL': 'Média Geral'},
+            title=f'Média Geral das Notas do ENEM por Município – {ano}'
         )
-        fig.update_geos(fitbounds="locations", visible=False)
-        fig.update_layout(margin={"r":0,"t":50,"l":0,"b":0})
-    
-        st.plotly_chart(fig, use_container_width=True)
+
+        fig_mapa.update_geos(
+            fitbounds="locations",
+            visible=False
+        )
+
+        fig_mapa.update_layout(
+            margin={"r": 0, "t": 50, "l": 0, "b": 0}
+        )
+
+        st.plotly_chart(fig_mapa, use_container_width=True)
+
+    else:
+        st.warning(
+            f"Dados insuficientes para gerar o mapa por município no ENEM {ano}."
+        )
 
 
-   
-
-
-
-
-
-
-
-
-    
