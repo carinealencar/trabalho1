@@ -195,11 +195,11 @@ if botao:
     st.markdown("### 📮 Instituições de ensino")
 
 instituicoes = {
-    'xxxx': df.ins[df['TP_ANO_CONCLUIU'] == 1]}
+    'instituiçoes': df.ins[df['TP_ANO_CONCLUIU'] == 1]}
 
-    df_ins = {pd.DataFrame.from_dict(instituicoes, orient='index', columns=['Instituições']).reset_index().rename(columns={'index': 'Tipos'}))
-    fig = px.bar(df_ins, x='Tipos', y='Instituições', title='Tipos de instituições de ensino')
-    st.plotly_chart(fig, use_container_width=True)
+df_ins = {pd.DataFrame.from_dict(instituicoes, orient='index', columns=['Instituições']).reset_index().rename(columns={'index': 'Tipos'}))
+fig = px.bar(df_ins, x='Tipos', y='Instituições', title='Tipos de instituições de ensino')
+st.plotly_chart(fig, use_container_width=True)
 
 
 
