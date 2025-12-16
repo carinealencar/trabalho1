@@ -257,4 +257,11 @@ if botao:
     )
     fig_mapa.update_geos(fitbounds="locations", visible=False) 
     fig_mapa.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}) 
+    fig_mapa.update_geos(
+        scope="south america",
+        center={"lat": -14.2350, "lon": -51.9253},  # centro do Brasil
+        projection_scale=5,                         # controla o zoom inicial
+        visible=False
+    )
+
     st.plotly_chart(fig_mapa, use_container_width=True)
