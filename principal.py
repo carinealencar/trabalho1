@@ -237,6 +237,10 @@ if botao:
         for f in geojson_municipios["features"]
     }
     df_municipio["NOME_MUNICIPIO"] = df_municipio[coluna_municipio].map(mapa_nomes)
+    df_municipio[coluna_municipio].isin(
+        [f["properties"]["id"] for f in geojson_municipios["features"]]
+    ).mean()
+
 
     fig_mapa = px.choropleth(
         df_municipio,
