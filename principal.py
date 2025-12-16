@@ -282,7 +282,7 @@ if botao:
     
     df_escolas = pd.DataFrame.from_dict(escolas, orient='index', columns=['Quantidade']).reset_index().rename(columns={'index': 'Instituição'})
     
-    fig = px.bar(df_escolas, x='Instituição', y='Quantidade', title='Tipos de instituições de ensino dos discentes de 2020 até 2023')
+    fig = px.bar(df_escolas, x='Instituição', y='Quantidade', title='Tipos de instituições de ensino dos discentes')
     st.plotly_chart(fig, use_container_width=True)
         
     
