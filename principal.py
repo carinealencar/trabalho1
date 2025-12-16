@@ -273,5 +273,19 @@ if botao:
 
     st.markdown("## 📮 Instituições de ensino")
     
-    df_escola = df[['TP_ESCOLA']] #definindo o dataframe de instituição
+    escolas = {
+        'Não respondeu': df.loc[df['TP_ESCOLA'] == 1],
+        'Pública': df.loc[df['TP_ESCOLA'] == 2],
+        'Privada': df.loc[df['TP_ESCOLA'] == 3],
+        'Exterior': df.loc[df['TP_ESCOLA'] == 4],
+    }    
+    df_escolas = (pd.DataFrame.from_dict(escolas, orient='index', columns=['Tipo']).reset_index().rename(columns={'index': 'Instituição'}))
+    fig = px.bar(df_medias, x='Instituição', y='Tipo', title='Tipos de instituições de ensino dos discentes de 2020 até 2023')
+    st.plotly_chart(fig, use_container_width=True)
+
+    df_escolas = df.copy()
+    
+    df_escolas = df_escolas.dropna(subset=['TP_ESCOLA'])
+    
+    
     
