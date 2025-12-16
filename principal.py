@@ -237,10 +237,6 @@ if botao:
         for f in geojson_municipios["features"]
     }
     df_municipio["NOME_MUNICIPIO"] = df_municipio[coluna_municipio].map(mapa_nomes)
-    df_municipio[coluna_municipio].isin(
-        [f["properties"]["id"] for f in geojson_municipios["features"]]
-    ).mean()
-
 
     fig_mapa = px.choropleth(
         df_municipio,
@@ -263,9 +259,14 @@ if botao:
     fig_mapa.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}) 
     fig_mapa.update_geos(
         scope="south america",
-        center={"lat": -14.2350, "lon": -51.9253},  # centro do Brasil
-        projection_scale=5,                         # controla o zoom inicial
+        center=dict(lat=-14.2350, lon=-51.9253),
+        projection_scale=5,
         visible=False
+    )
+    
+    fig_mapa.update_layout(
+        margin=dict(r=0, l=0, t=50, b=0),
+        dragmode="zoom"
     )
 
     st.plotly_chart(fig_mapa, use_container_width=True)
