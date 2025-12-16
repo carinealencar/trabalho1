@@ -274,7 +274,7 @@ if botao:
     st.markdown("## 📮 Instituições de ensino")
 
 escolas = {
-    'Não respondeu': len(df.loc[df['TP_ESCOLA'] == 1]),
+    #'Não respondeu': len(df.loc[df['TP_ESCOLA'] == 1]),
     'Pública': len(df.loc[df['TP_ESCOLA'] == 2]),
     'Privada': len(df.loc[df['TP_ESCOLA'] == 3]),
     'Exterior': len(df.loc[df['TP_ESCOLA'] == 4]),
