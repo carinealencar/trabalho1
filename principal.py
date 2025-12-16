@@ -271,10 +271,8 @@ if botao:
 
     st.plotly_chart(fig_mapa, use_container_width=True)
     
-    
     st.markdown("## 📮 Instituições de ensino")
 
-# Contar quantos alunos de cada tipo de escola
 escolas = {
     'Não respondeu': len(df.loc[df['TP_ESCOLA'] == 1]),
     'Pública': len(df.loc[df['TP_ESCOLA'] == 2]),
