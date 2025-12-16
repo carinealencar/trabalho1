@@ -271,7 +271,7 @@ if botao:
 
     st.plotly_chart(fig_mapa, use_container_width=True)
 
- st.markdown("## 📮 Instituições de ensino")
+    st.markdown("## 📮 Instituições de ensino")
     df_tp_escola = df[['TP_ESCOLA']]
     
     df_tp_escola = (
