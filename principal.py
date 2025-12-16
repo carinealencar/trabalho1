@@ -272,7 +272,7 @@ if botao:
     st.plotly_chart(fig_mapa, use_container_width=True)
 
     st.markdown("## 📮 Instituições de ensino")
-    df_tp_escola = df[['TP_ESCOLA']]
+    df_tp_escola = df[['TP_ESCOLA']] #definindo o dataframe de instituição
     
     df_tp_escola = (
     df['TP_ESCOLA']
@@ -286,4 +286,4 @@ fig = px.bar(
     df_tp_escola,
     x='TP_ESCOLA',
     y='Quantidade',
-    title='Distribuição dos participantes por tipo de escola'
+    title='Distribuição dos participantes por tipo de escola')
