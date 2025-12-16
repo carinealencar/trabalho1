@@ -273,16 +273,16 @@ if botao:
     
     st.markdown("## 📮 Instituições de ensino")
 
-escolas = {
-    'Não respondeu': len(df.loc[df['TP_ESCOLA'] == 1]),
-    'Pública': len(df.loc[df['TP_ESCOLA'] == 2]),
-    'Privada': len(df.loc[df['TP_ESCOLA'] == 3]),
-    'Exterior': len(df.loc[df['TP_ESCOLA'] == 4]),
-}    
-
-df_escolas = pd.DataFrame.from_dict(escolas, orient='index', columns=['Quantidade']).reset_index().rename(columns={'index': 'Instituição'})
-
-fig = px.bar(df_escolas, x='Instituição', y='Quantidade', title='Tipos de instituições de ensino dos discentes de 2020 até 2023')
-st.plotly_chart(fig, use_container_width=True)
+    escolas = {
+        'Não respondeu': len(df.loc[df['TP_ESCOLA'] == 1]),
+        'Pública': len(df.loc[df['TP_ESCOLA'] == 2]),
+        'Privada': len(df.loc[df['TP_ESCOLA'] == 3]),
+        'Exterior': len(df.loc[df['TP_ESCOLA'] == 4])
+    }    
     
+    df_escolas = pd.DataFrame.from_dict(escolas, orient='index', columns=['Quantidade']).reset_index().rename(columns={'index': 'Instituição'})
+    
+    fig = px.bar(df_escolas, x='Instituição', y='Quantidade', title='Tipos de instituições de ensino dos discentes de 2020 até 2023')
+    st.plotly_chart(fig, use_container_width=True)
+        
     
